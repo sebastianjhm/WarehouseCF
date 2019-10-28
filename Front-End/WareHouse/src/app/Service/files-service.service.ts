@@ -10,7 +10,7 @@ export class FilesServiceService {
   constructor( private http: HttpClient ) { }
 
   url = 'http://localhost:5000';
-
+  
   postFiles(ReceivedFile: File[]) {
     console.log('ahí lo envié');
 

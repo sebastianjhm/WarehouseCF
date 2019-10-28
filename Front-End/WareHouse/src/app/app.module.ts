@@ -7,11 +7,13 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { PickingLPComponent } from './picking-lp/picking-lp.component';
+import { AllocationComponent } from './allocation/allocation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PickingLPComponent
+    PickingLPComponent,
+    AllocationComponent
   ],
   imports: [
     BrowserModule,
