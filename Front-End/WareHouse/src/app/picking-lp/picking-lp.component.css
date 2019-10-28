@@ -1,0 +1,110 @@
+input[type="file"] {
+    display: none;
+}
+
+
+
+.n{
+    background-color: #e8e8e8;
+}
+
+.else{
+    text-align: center;
+}
+
+.principal-title{
+    text-align:center;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.title{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.title_text{
+    font-weight: bold;
+}
+
+.input_file{
+    font-size: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 4px 4px;
+    cursor: pointer;
+    display: block;
+    width: 175px;
+}
+
+.ngx{
+    border-radius: 20px;
+    margin-top: -4px;
+    background-color: #e7e7e7;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    height: 150%;
+    /* border: 2px dotted #0782d0; */
+}
+
+.tyu {
+
+    /* Esta debería ser la clase que controla los estilos del borde, sin embargo lo único que hace es quitarlos
+    y por eso hay que ponerlos arriba */
+    
+    
+    /* height: 100px;
+    margin: auto;
+    border: 2px dotted #0782d0;
+    border-radius: 30px; */
+
+}
+
+
+.ngx:hover {
+    background-color: #dadada;
+}
+
+.image{
+    padding-top: 3px;
+    padding-bottom : 3px;
+    padding-left: -2px;
+    padding-right: -2px;
+    border-style: solid;
+    border-radius: 6px;
+    border-width: 1.5pt;
+    border-color: #6b6b6b;
+    margin-left:10px;
+    height: 27px;
+}
+
+#ngx-text{
+    text-align: center;
+    font-size: 15px;
+}
+
+
+table{
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    font-size: 14px;
+    text-align: center;
+}
+
+.paginator{
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+}
+  
+.paginator /deep/ .ngx-pagination .current {
+background: rgb(90, 90, 90);
+}
+  
+.pag-section{
+display: flex;
+justify-content: center;
+}

@@ -1,1 +1,101 @@
-<p>picking-lp works!</p>
+
+<!-- Para el uso de arratsrar
+https://www.npmjs.com/package/ngx-file-drop
+npm install ngx-file-drop --save -->
+
+<!-- Para el paginador
+https://www.npmjs.com/package/ngx-pagination
+npm install ngx-pagination --save -->
+
+<br>
+<!---------------------------------Archivo Vector-------------------------------------------->
+
+
+<!------------------Título------------------------->
+<label class="input_file">
+  <input type="file" onclick="this.value = null" (change) ="clickVector($event.target.files)"  accept=".xls, .xlsx" value="">
+
+  <div class="title">
+    <span class="title_text">Excel File</span>
+    <img class="image" src="./assets/paperclip.svg">
+  </div>
+</label>
+<!------------------------------------------------->
+
+
+
+<!--------------------------Drag Box(Área de Archivos)-------------------------------->
+<div class="ngx">
+  <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedVector($event)"
+  (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" accept="xls, xlsx" dropZoneClassName="tyu">
+
+    <ng-template  ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+
+
+      <!--Si no se ha arrastrado ningún archivo muestra mensaje por defecto-->
+      <div *ngIf="!ExcelFile; else empty"  id="ngx-text">
+        <img width="40" src="./assets/upload-button.svg">
+        <br>
+        <span>Drag your file here :)</span>
+      </div>
+      <!--Si no muestra el nombre del archivo ingresado-->
+      <ng-template #empty  class="else">
+        <div class="else">
+          <span>{{FileName}}</span>
+        </div>
+      </ng-template>
+      <!-------------------------------------------------------------------->
+
+    </ng-template>
+
+
+  </ngx-file-drop>
+</div>
+
+<br>
+<br>
+<div *ngIf="receivedRuta">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
+      </tr>
+      <tr>
+        <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let r of receivedRuta.ruta| paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
+
+      <!-- Número de Ruta -->
+      <tr>
+        <th colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
+      </tr>
+
+      <!-- Distancia Recorrida -->
+      <tr>
+        <td colspan="4">Distancia Recorrida: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
+      </tr>
+  
+      <!-- Recorrido -->
+      <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
+        <td>Del rack</td>
+        <td>{{x[0]}}</td>
+        <td>al rack</td>
+        <td>{{x[1]}}</td>
+      </tr>
+
+    </tbody>
+  </table>  
+</div>
+
+<div class="pag-section">
+  <pagination-controls (pageChange)="pageActual = $event" class="paginator" *ngIf="receivedRuta"></pagination-controls>
+</div>
+
+<br>
+<div style="text-align: center;">
+  <button class="btn btn-primary" (click)=downloadFile() id=b>DOWNLOAD</button>
+</div>
+
+<!----------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------->
