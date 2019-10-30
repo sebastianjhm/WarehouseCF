@@ -114,7 +114,7 @@ export class PickingLPComponent implements OnInit {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
-  ngOnInit(){
+  ngOnInit() {
     (document.getElementById('b') as HTMLInputElement).disabled = true;
   }
 
