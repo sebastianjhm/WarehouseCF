@@ -68,7 +68,7 @@ npm install ngx-pagination --save -->
 
       <!-- Número de Ruta -->
       <tr>
-        <th colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
+        <th scope="col" colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
       </tr>
 
       <!-- Distancia Recorrida -->
@@ -96,6 +96,10 @@ npm install ngx-pagination --save -->
 <div style="text-align: center;">
   <button class="btn btn-primary" (click)=downloadFile() id=b>DOWNLOAD</button>
 </div>
+
+<br>
+<br>
+
 
 <!----------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------->

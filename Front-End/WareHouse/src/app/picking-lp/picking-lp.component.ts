@@ -87,15 +87,16 @@ export class PickingLPComponent implements OnInit {
 
 
   getTabla() {
-    this.http.getRuta().subscribe((data: Rutas) => {
-      this.receivedRuta = data;
-    });
-    setTimeout(() => {
-      console.log(this.receivedRuta);
-    }, 2000);
-    
-  }
+    this.http.getRuta().subscribe(
+      (data: Rutas) => { this.receivedRuta = data; },
+      err => console.log(err),
+      () => console.log(this.receivedRuta)
+    );
 
+    // setTimeout(() => {
+    //   console.log(this.receivedRuta);
+    // }, 2000);
+  }
 
   downloadFile() {
     if (this.llegoServicio === true) {
