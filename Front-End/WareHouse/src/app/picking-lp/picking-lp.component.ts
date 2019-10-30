@@ -13,11 +13,11 @@ import { FilesServiceService } from '../Service/files-service.service';
 })
 export class PickingLPComponent implements OnInit {
 
-  constructor( private http:FilesServiceService ) {}
+  constructor( private http: FilesServiceService ) {}
   // Variables de la paginación pageActual: numero de pagina; itemsPorPagina: su nombre lo dice
   pageActual = 1;
   itemsPorPagina = 1;
-  
+
   // Variables Archivo
   FileName: string;
   public ExcelFile: File;
@@ -64,11 +64,12 @@ export class PickingLPComponent implements OnInit {
       this.http.postFiles(this.filesArray).subscribe(
         res => {
           console.log(res);
-          (<HTMLInputElement> document.getElementById("b")).disabled = false;
           this.convertBLOBtoXLSX(res);
         },
-        err => {
-          console.log(err);
+        err => { console.log(err); },
+        () => {
+          this.getTabla();
+          (document.getElementById('b') as HTMLInputElement).disabled = false;
         }
       );
     }
@@ -80,17 +81,14 @@ export class PickingLPComponent implements OnInit {
     });
     console.log(this.fileD);
     this.llegoServicio = true;
-
-    // Invocar JSON de ruta
-    this.getTabla();
   }
 
 
   getTabla() {
     this.http.getRuta().subscribe(
       (data: Rutas) => { this.receivedRuta = data; },
-      err => console.log(err),
-      () => console.log(this.receivedRuta)
+      err => { console.log(err); },
+      () => { console.log(this.receivedRuta); }
     );
 
     // setTimeout(() => {
@@ -117,7 +115,7 @@ export class PickingLPComponent implements OnInit {
   }
 
   ngOnInit(){
-    (<HTMLInputElement> document.getElementById("b")).disabled = true;
+    (document.getElementById('b') as HTMLInputElement).disabled = true;
   }
 
 }

@@ -21,7 +21,7 @@ export class FilesServiceService {
 
   getRuta() {
     console.log('Estoy trayendo el json');
-    console.log(this.url + '/rutas')
-    return this.http.get<Rutas>(this.url + '/rutas')
+    console.log(this.url + '/rutas');
+    return this.http.get<Rutas>(this.url + '/rutas');
   }
 }
