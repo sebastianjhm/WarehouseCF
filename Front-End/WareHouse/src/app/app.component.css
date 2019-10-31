@@ -1,8 +1,3 @@
-.menu{
-    display: flex;
-}
-
-
 .dc-logo{
     height: 30px;
     margin-right: 25px;
@@ -10,7 +5,8 @@
 }
 
 .colornb {
-    background-color: rgb(119, 110, 110) ;
+    background-color: rgb(119, 110, 110);
+    height: 60px;
 }
 
 .but-nb{
@@ -40,22 +36,12 @@
     margin-left: 650px;
 }
 
-.icon-nb{
-    height: 35px;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.principal-nb{
-    float: right;
-}
-
 a svg path{ 
     fill: rgb(255, 255, 255);
 }
 
 a svg:hover path{ 
-  fill: rgb(163, 163, 163);
+  fill: rgb(180, 180, 180);
 }
 
 .icon-svg{

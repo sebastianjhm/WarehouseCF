@@ -88,14 +88,7 @@ export class PickingLPComponent implements OnInit {
     this.http.getRuta().subscribe(
       (data: Rutas) => { this.receivedRuta = data; },
       err => { console.log(err); },
-      () => {
-        console.log(this.receivedRuta);
-        if (this.receivedRuta.distanciaTotal !== 0) {
-          console.log('si');
-        } else {
-          console.log('no');
-        }
-      }
+      () => { console.log(this.receivedRuta); }
     );
   }
 
