@@ -20,12 +20,12 @@
     border-color: rgb(119, 110, 110);
 }
 
-.but-nb:hover{
+.but-nb:hover {
     background-color: rgb(119, 110, 110);
     border-color: rgb(119, 110, 110);
 }
 
-.but-nb:active{
+.but-nb:active {
     background-color: rgb(119, 110, 110);
     border-color: rgb(119, 110, 110);
 }
@@ -50,7 +50,17 @@
     float: right;
 }
 
-a svg:hover #facebook{ 
-  fill: #111;
-  height: 35px;
+a svg path{ 
+    fill: rgb(255, 255, 255);
+}
+
+a svg:hover path{ 
+  fill: rgb(163, 163, 163);
+}
+
+.icon-svg{
+    width: 35px;
+    height: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
 }

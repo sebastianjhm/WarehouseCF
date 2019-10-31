@@ -307,13 +307,13 @@ def declararModeloLineal( model, param_Nodos, param_Ords, param_Referencias, par
     #fed
     model.r5 = pyo.Constraint( model.O, rule = r5)
 #fed
-########################################################################################################
+#########################################################################################################################################
     
     
     
     
     
-########################################################################################################
+#########################################################################################################################################
 def imprimirResultadosXLSX( workbook, instance ):
     ## --------------------- GUARDAR LOS RESULTADOS EN ARCHIVO EXCEL -----------------------------
 
@@ -337,22 +337,22 @@ def imprimirResultadosXLSX( workbook, instance ):
     row=3
     col=0
     for o in instance.O:
-        worksheet.merge_range(row, col, row, 3, "Orden "+ str(o), merge_format)
+        worksheet.merge_range(row, col, row, 3, "Ruta "+ str(o), merge_format)
         row += 1
 
         worksheet.write(row, col,"Distancia Recorrida: ", cell_format)
         worksheet.write(row, col + 1,instance.Dist_ORD[o].value, cell_format)
         row += 1
         
-        worksheet.write(row, col,"Ruta: ", cell_format)
+        worksheet.write(row, col,"Recorrido: ", cell_format)
         row += 1
         
         for i in instance.ORDENES[o]:
             for j in instance.ORDENES[o]:
                 if ( instance.x[o,i,j].value == 1):
-                    worksheet.write(row, col + 0,"Del nodo ", cell_format)
+                    worksheet.write(row, col + 0,"Del rack ", cell_format)
                     worksheet.write(row, col + 1,i, cell_format)
-                    worksheet.write(row, col + 2," al nodo", cell_format)
+                    worksheet.write(row, col + 2," al rack", cell_format)
                     worksheet.write(row, col + 3,j, cell_format)
                 #fi
             #rof
@@ -366,7 +366,7 @@ def imprimirResultadosXLSX( workbook, instance ):
     workbook.close()
     ##  -------------------------------------------------------------------------------------
 #fed
-########################################################################################################
+##########################################################################################################################################
     
     
     
