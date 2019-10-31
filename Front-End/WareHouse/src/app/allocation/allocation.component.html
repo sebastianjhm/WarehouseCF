@@ -1,1 +1,54 @@
-<p>allocation works!</p>
+
+<!---------------------------------Archivo Vector-------------------------------------------->
+
+<br>
+<div class="principal-title">
+  <span>Allocation Problem </span> 
+  <img class="stock" src="./assets/stock.svg">
+</div>
+<br>
+
+<!------------------Título------------------------->
+<label class="input_file">
+  <input type="file" onclick="this.value = null" (change) ="clickVector($event.target.files)"  accept=".xls, .xlsx" value="">
+
+  <div class="title">
+    <span class="title_text">Excel File</span>
+    <img class="image" src="./assets/paperclip.svg">
+  </div>
+</label>
+<!------------------------------------------------->
+
+
+
+<!--------------------------Drag Box(Área de Archivos)-------------------------------->
+<div class="ngx">
+  <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedVector($event)"
+  (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" accept="xls, xlsx" dropZoneClassName="tyu">
+
+    <ng-template  ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+
+
+      <!--Si no se ha arrastrado ningún archivo muestra mensaje por defecto-->
+      <div *ngIf="!ExcelFile; else empty"  id="ngx-text">
+        <img width="40" src="./assets/upload-button.svg">
+        <br>
+        <span>Drag your file here :)</span>
+      </div>
+      <!--Si no muestra el nombre del archivo ingresado-->
+      <ng-template #empty  class="else">
+        <div class="else">
+          <span>{{FileName}}</span>
+        </div>
+      </ng-template>
+      <!-------------------------------------------------------------------->
+
+    </ng-template>
+
+
+  </ngx-file-drop>
+</div>
+
+
+<!----------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------->

@@ -1,15 +1,11 @@
 
-<!-- Para el uso de arratsrar
-https://www.npmjs.com/package/ngx-file-drop
-npm install ngx-file-drop --save -->
-
-<!-- Para el paginador
-https://www.npmjs.com/package/ngx-pagination
-npm install ngx-pagination --save -->
-
-<br>
 <!---------------------------------Archivo Vector-------------------------------------------->
-
+<br>
+<div class="principal-title">
+  <span>Picking Problem </span>
+  <img height="35" src="./assets/picking.svg">
+</div>
+<br>
 
 <!------------------Título------------------------->
 <label class="input_file">
@@ -54,43 +50,46 @@ npm install ngx-pagination --save -->
 
 <br>
 <br>
-<div *ngIf="receivedRuta">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
-      </tr>
-      <tr>
-        <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
-      </tr>
-    </thead>
-    <tbody *ngFor="let r of receivedRuta.ruta| paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
-
-      <!-- Número de Ruta -->
-      <tr>
-        <th scope="col" colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
-      </tr>
-
-      <!-- Distancia Recorrida -->
-      <tr>
-        <td colspan="4">Distancia Recorrida: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
-      </tr>
+<div *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0">
+  <div >
+    <table class="table" aria-describedby="mydesc">
+      <thead>
+        <tr>
+          <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
+        </tr>
+        <tr>
+          <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let r of receivedRuta.ruta| paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
   
-      <!-- Recorrido -->
-      <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
-        <td>Del rack</td>
-        <td>{{x[0]}}</td>
-        <td>al rack</td>
-        <td>{{x[1]}}</td>
-      </tr>
-
-    </tbody>
-  </table>  
+        <!-- Número de Ruta -->
+        <tr>
+          <th scope="col" colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
+        </tr>
+  
+        <!-- Distancia Recorrida -->
+        <tr>
+          <td colspan="4">Distancia Recorrida: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
+        </tr>
+    
+        <!-- Recorrido -->
+        <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
+          <td>Del rack</td>
+          <td>{{x[0]}}</td>
+          <td>al rack</td>
+          <td>{{x[1]}}</td>
+        </tr>
+  
+      </tbody>
+    </table>  
+  </div>
+    
+  <div class="pag-section">
+    <pagination-controls (pageChange)="pageActual = $event" class="paginator" *ngIf="receivedRuta"></pagination-controls>
+  </div>
 </div>
 
-<div class="pag-section">
-  <pagination-controls (pageChange)="pageActual = $event" class="paginator" *ngIf="receivedRuta"></pagination-controls>
-</div>
 
 <br>
 <div style="text-align: center;">

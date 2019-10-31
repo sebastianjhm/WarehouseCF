@@ -46,8 +46,11 @@
     margin-right: 10px;
 }
 
-.
-
 .principal-nb{
     float: right;
+}
+
+a svg:hover #facebook{ 
+  fill: #111;
+  height: 35px;
 }

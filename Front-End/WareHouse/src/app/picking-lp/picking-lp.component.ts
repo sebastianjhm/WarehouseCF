@@ -62,11 +62,11 @@ export class PickingLPComponent implements OnInit {
 
     if (this.filesArray[0]) {
       this.http.postFiles(this.filesArray).subscribe(
-        res => {
-          console.log(res);
-          this.convertBLOBtoXLSX(res);
+        response => {
+          console.log(response);
+          this.convertBLOBtoXLSX(response);
         },
-        err => { console.log(err); },
+        error => { console.log(error); },
         () => {
           this.getTabla();
           (document.getElementById('b') as HTMLInputElement).disabled = false;
@@ -88,12 +88,15 @@ export class PickingLPComponent implements OnInit {
     this.http.getRuta().subscribe(
       (data: Rutas) => { this.receivedRuta = data; },
       err => { console.log(err); },
-      () => { console.log(this.receivedRuta); }
+      () => {
+        console.log(this.receivedRuta);
+        if (this.receivedRuta.distanciaTotal !== 0) {
+          console.log('si');
+        } else {
+          console.log('no');
+        }
+      }
     );
-
-    // setTimeout(() => {
-    //   console.log(this.receivedRuta);
-    // }, 2000);
   }
 
   downloadFile() {
@@ -115,6 +118,7 @@ export class PickingLPComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getTabla();
     (document.getElementById('b') as HTMLInputElement).disabled = true;
   }
 
