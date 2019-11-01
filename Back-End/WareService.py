@@ -22,7 +22,7 @@ cors = CORS(app)
 @cross_origin()
 def post_picking():
     
-    ## SAVE EXCEL FILE THAT ARRIVE OF THE SERVICE FRONT
+    ## SAVE EXCEL FILE THAT ARRIVE OF THE FRONT
     receivedFile = request.files["myExcelFile"]
     
     
@@ -122,7 +122,7 @@ def save_routes( instance ):
     
     
     
-################################################################################################################  
+######################################################################################################################################  
 def read_data_XLSX( receivedFile ):
     
     ## --------------------- READ DATA EXCEL WHIT OPENPYXL -----------------------------------
