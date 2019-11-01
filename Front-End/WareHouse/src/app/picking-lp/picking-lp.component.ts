@@ -28,7 +28,7 @@ export class PickingLPComponent implements OnInit {
   // Variables Ruta
   public receivedRuta: Rutas;
 
-  public clickFile(file: File) {
+  public inputFile(file: File) {
     this.ExcelFile = file[0];
     this.FileName = file[0].name;
     console.log(this.ExcelFile);

@@ -20,38 +20,37 @@ cors = CORS(app)
 
 @app.route('/postFile', methods=['POST'])
 @cross_origin()
-def post():
+def post_picking():
     
-    ## GUARDAR ARCHIVO EXCEL QUE LLEGA DEL SERVICIO
+    ## SAVE EXCEL FILE THAT ARRIVE OF THE SERVICE FRONT
     receivedFile = request.files["myExcelFile"]
     
     
-    ## LECTURA DE DATOS OPENPYXL
-    param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia = lecturaDatos( receivedFile )
+    ## READ DATA OPENPYXL
+    param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia = read_data_XLSX( receivedFile )
     
     
-    ## DECLARAR SOLVER 'GLPK', CREAR UN MODELO ABSTRACTO PYOMO, DECLAR MODELO LINEAL
+    ## DECLARE SOLVER 'GLPK', CREATE A PYOMO ABSTRACT MODEL, DECLARE LINEAR MODEL
     opt = SolverFactory('glpk')
     model = pyo.AbstractModel()
-    declararModeloLineal( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia )
+    create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia )
     
     
-    ## CREAR UN INSTANCIA DEL MODELO, RESOLVERLA, IMPRIMIR RESULTADOS POR CONSOLA
+    ## CREATE AN INSTANCE OF THE MODEL, SOLVE, PRINT RESULTS BY CONSOLE
     instance = model.create_instance()
     results = opt.solve(instance, timelimit = 2)
     #instance.display()
-    imprimirResultadosConsola( instance )
+    print_results_in_console( instance )
     
-    ## GUARDAR JSON RUTAS
+    ## SAVE JSON ROUTES
     Rutas["distanciaTotal"] = 0
     Rutas["ruta"] = []
-    guardarRutas( instance )
+    save_routes( instance )
     
     
-    ## CREAR ARCHIVO EXCEL E IMPRIMIR RESULTADOS CON 'XLSXWRITER'
-    ## Crear libro y añadir un hoja
+    ## CREATE EXCEL FILE AND PRINT RESULTS WITH 'XLSXWRITER'
     workbook = xlsxwriter.Workbook('Resultados.xlsx')
-    imprimirResultadosXLSX( workbook, instance )
+    print_results_XLSX( workbook, instance )
     
     
     return send_file('Resultados.xlsx', as_attachment=True)
@@ -64,8 +63,7 @@ def post():
 
 @app.route('/rutas', methods = ['GET'])
 @cross_origin()
-def getRutas():
-    print("ahi los estoy mandando")
+def get_routes_picking():
     return jsonify(Rutas)
 #fed
     
@@ -75,7 +73,8 @@ def getRutas():
 
 
 ################################################################################################################
-def imprimirResultadosConsola( instance ):
+def print_results_in_console( instance ):
+    
     print("\n\n")
     print("SOLUCIÓN DEL EJERCICIO")
     print("--------------------------")
@@ -94,9 +93,10 @@ def imprimirResultadosConsola( instance ):
             #rof
         #rof
     #rof
+    
 #fed
     
-def guardarRutas( instance ):
+def save_routes( instance ):
     
     nueva_ruta = {"id":0, "distanciaRuta": 0, "recorrido": []}
     Rutas["distanciaTotal"] = pyo.value(instance.FO)
@@ -116,24 +116,25 @@ def guardarRutas( instance ):
         Rutas["ruta"].append(nr)
     #rof
     print(Rutas)
+    
 #fed
 ################################################################################################################   
     
     
     
 ################################################################################################################  
-def lecturaDatos( receivedFile ):
-    ## --------------------- LEER ARCHIVO EXCEL CON OPENPYXL -----------------------------------
-
+def read_data_XLSX( receivedFile ):
     
-    ## Abrir el archivo y guardar en la variable archivo
+    ## --------------------- READ DATA EXCEL WHIT OPENPYXL -----------------------------------
+    
+    ## OPEN FILE AND SAVE IN VARIABLE (archivo)
     archivo = openpyxl.load_workbook(receivedFile, data_only = True)
 
-    ## Leer las hojas del archivo, Seleccionar la primera hoja y la columna D
+    ## READ SHEETS OF FILE AND SELECT THE THE FIRST SHEET
     sheets = archivo.sheetnames
     sheetDatos = archivo[sheets[0]]
 
-    ## NODOS (param_Nodos)
+    ## NODES (param_Nodos)
     param_Nodos = []
     column = sheetDatos['A']
     for x in range(len(column)): 
@@ -142,7 +143,7 @@ def lecturaDatos( receivedFile ):
         #fi
     #rof
 
-    ## Ordenes (param_Ordenes)
+    ## ORDERS (param_Ordenes)
     param_Ords = []
     column = sheetDatos['B']
     for x in range(len(column)): 
@@ -152,7 +153,7 @@ def lecturaDatos( receivedFile ):
     #rof
 
 
-    ## Referencias (param_Referencias)
+    ## REFERENCES (param_Referencias)
     param_Referencias = []
     column = sheetDatos['C']
     for x in range(len(column)): 
@@ -161,7 +162,7 @@ def lecturaDatos( receivedFile ):
         #fi
     #rof
 
-    ## Ubicación de cada referencia (param_NOD_REF)
+    ## LOCATION OF EACH REFERENCE (param_NOD_REF)
     lect = []
     column = sheetDatos['F']
     for x in range(len(column)): 
@@ -193,7 +194,7 @@ def lecturaDatos( receivedFile ):
     param_R = dict(zip(param_Ords, lectR))
 
 
-    ## Distancia
+    ## DISTANCE MATRIX
     param_Distancia = []
     sheetDistancias = archivo[sheets[1]]
     for i in  range(sheetDistancias.min_row + 1,sheetDistancias.max_row + 1):
@@ -211,10 +212,10 @@ def lecturaDatos( receivedFile ):
     
 
 ######################################################################################################################################
-def declararModeloLineal( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia ):
+def create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia ):
     
 
-    ## Conjuntos ------------------------------------------------------------------------
+    ## -------------------SETS--------------------------------
     model.NODOS = pyo.Set( initialize = param_Nodos )
     model.O = pyo.Set( initialize = param_Ords )
     model.REF = pyo.Set( initialize = param_Referencias )
@@ -250,7 +251,7 @@ def declararModeloLineal( model, param_Nodos, param_Ords, param_Referencias, par
     model.OR  = pyo.Set(dimen = 2, initialize = junte4 )
 
 
-    ## Parámetros -------------------------------------------------------------------------------
+    ## --------------------- PARAMETERS -------------------------------------
     def paramDistancia(model, i, j):
         return(param_Distancia[i][j])
     #fed
@@ -266,20 +267,20 @@ def declararModeloLineal( model, param_Nodos, param_Ords, param_Referencias, par
     #fed
     model.Distancia_R = pyo.Param(model.REF, model.REF, initialize = dinit, mutable = True)
 
-    ## Variables ---------------------------------------------------------------------------------
+    ## ----------------------- VARIABLES ---------------------------------------
     model.x = pyo.Var(model.OROR, domain = pyo.Binary)
     model.aux = pyo.Var(model.OR)
     model.Dist_ORD = pyo.Var(model.O)
 
 
-    ## Función Objetivo ---------------------------------------------------------------------------------
+    ## -------------------------- OBJECTIVE FUNCTION ------------------------------------
     def ObjFunc(model):
         return sum(model.Distancia_R[i,j]*model.x[o,i,j] for o in model.O for i in model.ORDENES[o] for j in model.ORDENES[o])
     #fed
     model.FO = pyo.Objective(rule = ObjFunc)
 
 
-    ## Restricciones ---------------------------------------------------------------------------------
+    ## --------------------------- RESTRICTIONS ----------------------------------------------
     def r1(model, o, i):
         return sum( model.x[o,i,j] for j in model.ORDENES[o]) == 1
     #fed
@@ -314,26 +315,25 @@ def declararModeloLineal( model, param_Nodos, param_Ords, param_Referencias, par
     
     
 #########################################################################################################################################
-def imprimirResultadosXLSX( workbook, instance ):
-    ## --------------------- GUARDAR LOS RESULTADOS EN ARCHIVO EXCEL -----------------------------
+def print_results_XLSX( workbook, instance ):
+    ## -------------------------- SAVE RESULTS IN EXCEL FILE -------------------------------------
 
-    ## Formatos
+    ## STYLES
     merge_format = workbook.add_format({
         'bold': 1,
         'align': 'center',
         'valign': 'vcenter'})
     cell_format = workbook.add_format({'align': 'center'})
         
-    ## Crear hoja
+    ## CREATE SHEET
     worksheet = workbook.add_worksheet('Resultados')
     worksheet.set_column(0, 0, 20)
 
-    #worksheet.merge_range('A1:D1', "SOLUCIÓN DEL EJERCICIO", merge_format)
     worksheet.merge_range(0, 0, 0, 3, "SOLUCIÓN DEL EJERCICIO", merge_format)
-
     worksheet.write(1, 0, "Distancia Total: ", merge_format)
     worksheet.write(1, 1, pyo.value(instance.FO), cell_format)
 
+    ## PRINT RESULTS
     row=3
     col=0
     for o in instance.O:
@@ -362,9 +362,8 @@ def imprimirResultadosXLSX( workbook, instance ):
     #rof
         
         
-    # Hay que incluir workbook.close()
+    ## CLOSE THE BOOK
     workbook.close()
-    ##  -------------------------------------------------------------------------------------
 #fed
 ##########################################################################################################################################
     
