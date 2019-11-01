@@ -6,7 +6,8 @@ import { AllocationComponent } from './allocation/allocation.component';
 
 const routes: Routes = [
   { path: 'pick', component: PickingLPComponent },
-  { path: 'alloc', component: AllocationComponent }
+  { path: 'alloc', component: AllocationComponent },
+  { path: '', component: AllocationComponent , pathMatch: 'full' }
 ];
 
 @NgModule({

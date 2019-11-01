@@ -28,7 +28,7 @@ export class PickingLPComponent implements OnInit {
   // Variables Ruta
   public receivedRuta: Rutas;
 
-  public clickVector(file: File) {
+  public clickFile(file: File) {
     this.ExcelFile = file[0];
     this.FileName = file[0].name;
     console.log(this.ExcelFile);
@@ -36,7 +36,7 @@ export class PickingLPComponent implements OnInit {
     this.sendFiles();
   }
 
-  public droppedVector(files: NgxFileDropEntry[]) {
+  public droppedFile(files: NgxFileDropEntry[]) {
     console.log('dropped');
     console.log(files);
     for (const droppedFile of files) {
@@ -87,7 +87,7 @@ export class PickingLPComponent implements OnInit {
   getTabla() {
     this.http.getRuta().subscribe(
       (data: Rutas) => { this.receivedRuta = data; },
-      err => { console.log(err); },
+      error => { console.log(error); },
       () => { console.log(this.receivedRuta); }
     );
   }
