@@ -54,6 +54,7 @@
   <div >
     <table class="table" aria-describedby="mydesc">
       <thead>
+        
         <tr>
           <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
         </tr>
@@ -86,7 +87,8 @@
   </div>
     
   <div class="pag-section">
-    <pagination-controls (pageChange)="pageActual = $event" class="paginator" *ngIf="receivedRuta"></pagination-controls>
+    <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
+    class="paginator"></pagination-controls>
   </div>
 </div>
 

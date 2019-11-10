@@ -31,15 +31,19 @@ def post_picking():
     
     
     ## DECLARE SOLVER 'GLPK', CREATE A PYOMO ABSTRACT MODEL, DECLARE LINEAR MODEL
-    opt = SolverFactory('glpk')
+    opt = SolverFactory('cplex', executable="C:\\Program Files\\IBM\\ILOG\\CPLEX_Studio128\\cplex\\bin\\x64_win64\\cplex")
+    #opt = SolverFactory('glpk')
     model = pyo.AbstractModel()
     create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia )
     
     
     ## CREATE AN INSTANCE OF THE MODEL, SOLVE, PRINT RESULTS BY CONSOLE
     instance = model.create_instance()
-    results = opt.solve(instance, timelimit = 2)
+    opt.options['timelimit'] = 2
+    results = opt.solve(instance, tee=False)
     #instance.display()
+    
+    ## PRINT RESULTS IN CONSOLE
     print_results_in_console( instance )
     
     ## SAVE JSON ROUTES
@@ -215,7 +219,7 @@ def read_data_XLSX( receivedFile ):
 def create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia ):
     
 
-    ## -------------------SETS--------------------------------
+    ## ------------------- SETS --------------------------------
     model.NODOS = pyo.Set( initialize = param_Nodos )
     model.O = pyo.Set( initialize = param_Ords )
     model.REF = pyo.Set( initialize = param_Referencias )
