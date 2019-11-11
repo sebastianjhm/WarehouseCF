@@ -37,9 +37,9 @@ def post_picking():
     create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia )
     
     
-    ## CREATE AN INSTANCE OF THE MODEL, SOLVE, PRINT RESULTS BY CONSOLE
+    ## CREATE AN INSTANCE OF THE MODEL, SOLVE PRINT RESULTS BY CONSOLE
     instance = model.create_instance()
-    opt.options['timelimit'] = 2
+    opt.options['timelimit'] = 60
     results = opt.solve(instance, tee=False)
     #instance.display()
     

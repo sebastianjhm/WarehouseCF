@@ -3,14 +3,14 @@
 
 <br>
 <div class="principal-title">
-  <span>Allocation Problem </span> 
+  <span>Allocation Problem</span> 
   <img class="stock" src="./assets/stock.svg">
 </div>
 <br>
 
 <!------------------Título------------------------->
 <label class="input_file">
-  <input type="file" onclick="this.value = null" (change) ="clickVector($event.target.files)"  accept=".xls, .xlsx" value="">
+  <input type="file" onclick="this.value = null" (change) ="inputFileAlloc($event.target.files)"  accept=".xls, .xlsx" value="">
 
   <div class="title">
     <span class="title_text">Excel File</span>
@@ -23,7 +23,7 @@
 
 <!--------------------------Drag Box(Área de Archivos)-------------------------------->
 <div class="ngx">
-  <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedVector($event)"
+  <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="droppedFileAlloc($event)"
   (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)" accept="xls, xlsx" dropZoneClassName="tyu">
 
     <ng-template  ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">

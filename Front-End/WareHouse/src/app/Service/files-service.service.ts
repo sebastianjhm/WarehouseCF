@@ -11,12 +11,15 @@ export class FilesServiceService {
 
   url = 'http://localhost:5000';
 
-  postFiles(ReceivedFile: File[]) {
-    console.log('ahí lo envié');
+  postFilesPicking( ReceivedFilePicking: File[] ) {
+    console.log('Send file picking');
+    const sendFormDataPicking = new FormData();
+    sendFormDataPicking.append('myExcelFile', ReceivedFilePicking[0]);
+    return this.http.post(this.url + '/postFile' , sendFormDataPicking, {responseType: 'arraybuffer'});
+  }
 
-    const sendFormData = new FormData();
-    sendFormData.append('myExcelFile', ReceivedFile[0]);
-    return this.http.post(this.url + '/postFile' , sendFormData, {responseType: 'arraybuffer'});
+  postFilesAllocation( ReceivedFile: File[] ) {
+    console.log('Send file allocation');
   }
 
   getRuta() {

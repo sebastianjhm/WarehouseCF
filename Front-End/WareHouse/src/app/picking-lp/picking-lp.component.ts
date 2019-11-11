@@ -59,9 +59,8 @@ export class PickingLPComponent implements OnInit {
   }
 
   sendFiles() {
-
     if (this.filesArray[0]) {
-      this.http.postFiles(this.filesArray).subscribe(
+      this.http.postFilesPicking(this.filesArray).subscribe(
         response => {
           console.log(response);
           this.convertBLOBtoXLSX(response);
@@ -69,7 +68,7 @@ export class PickingLPComponent implements OnInit {
         error => { console.log(error); },
         () => {
           this.getTabla();
-          (document.getElementById('b') as HTMLInputElement).disabled = false;
+          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
         }
       );
     }
@@ -106,13 +105,9 @@ export class PickingLPComponent implements OnInit {
     console.log(event);
   }
 
-  sleep(time: number) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-  }
-
   ngOnInit() {
     this.getTabla();
-    (document.getElementById('b') as HTMLInputElement).disabled = true;
+    (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
 
 }
