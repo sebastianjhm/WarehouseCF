@@ -113,6 +113,11 @@ table{
     text-decoration: none;
 }
 
+.paginator /deep/ .ngx-pagination a:focus, .ngx-pagination button:focus {
+    outline: none;
+    background: #6b6b6b;
+}
+
 .pag-section{
     display: flex;
     justify-content: center;
