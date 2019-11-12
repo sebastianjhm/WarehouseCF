@@ -4,8 +4,8 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 import xlsxwriter
 import pyomo.environ as pyo
-import copy
 from pyomo.opt import SolverFactory
+import copy
 import pyutilib.subprocess.GlobalData
 from Rutas import Rutas
 
@@ -27,14 +27,14 @@ def post_picking():
     
     
     ## READ DATA OPENPYXL
-    param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia = read_data_XLSX( receivedFile )
+    set_Nodos, set_Ords, set_Referencias, param_NOD_REF, set_Ordenes, set_R, param_Distancia = read_data_XLSX_Picking( receivedFile )
     
     
-    ## DECLARE SOLVER 'GLPK', CREATE A PYOMO ABSTRACT MODEL, DECLARE LINEAR MODEL
+    ## DECLARE SOLVER, CREATE A PYOMO ABSTRACT MODEL, DECLARE LINEAR MODEL
     opt = SolverFactory('cplex', executable="C:\\Program Files\\IBM\\ILOG\\CPLEX_Studio128\\cplex\\bin\\x64_win64\\cplex")
     #opt = SolverFactory('glpk')
     model = pyo.AbstractModel()
-    create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia )
+    create_lineal_model_Picking( model, set_Nodos, set_Ords, set_Referencias, param_NOD_REF, set_Ordenes, set_R, param_Distancia )
     
     
     ## CREATE AN INSTANCE OF THE MODEL, SOLVE PRINT RESULTS BY CONSOLE
@@ -44,17 +44,17 @@ def post_picking():
     #instance.display()
     
     ## PRINT RESULTS IN CONSOLE
-    print_results_in_console( instance )
+    print_results_in_console_Picking( instance )
     
     ## SAVE JSON ROUTES
     Rutas["distanciaTotal"] = 0
     Rutas["ruta"] = []
-    save_routes( instance )
+    save_routes_Picking( instance )
     
     
     ## CREATE EXCEL FILE AND PRINT RESULTS WITH 'XLSXWRITER'
-    workbook = xlsxwriter.Workbook('Resultados.xlsx')
-    print_results_XLSX( workbook, instance )
+    workbook = xlsxwriter.Workbook('Results_Picking.xlsx')
+    print_results_XLSX_Picking( workbook, instance )
     
     
     return send_file('Resultados.xlsx', as_attachment=True)
@@ -77,7 +77,7 @@ def get_routes_picking():
 
 
 ################################################################################################################
-def print_results_in_console( instance ):
+def print_results_in_console_Picking( instance ):
     
     print("\n\n")
     print("SOLUCIÓN DEL EJERCICIO")
@@ -100,7 +100,7 @@ def print_results_in_console( instance ):
     
 #fed
     
-def save_routes( instance ):
+def save_routes_Picking( instance ):
     
     nueva_ruta = {"id":0, "distanciaRuta": 0, "recorrido": []}
     Rutas["distanciaTotal"] = pyo.value(instance.FO)
@@ -127,7 +127,7 @@ def save_routes( instance ):
     
     
 ######################################################################################################################################  
-def read_data_XLSX( receivedFile ):
+def read_data_XLSX_Picking( receivedFile ):
     
     ## --------------------- READ DATA EXCEL WHIT OPENPYXL -----------------------------------
     
@@ -138,31 +138,31 @@ def read_data_XLSX( receivedFile ):
     sheets = archivo.sheetnames
     sheetDatos = archivo[sheets[0]]
 
-    ## NODES (param_Nodos)
-    param_Nodos = []
+    ## NODES (set_Nodos)
+    set_Nodos = []
     column = sheetDatos['A']
     for x in range(len(column)): 
         if (type(column[x].value) != str and column[x].value != None):
-            param_Nodos.append(column[x].value)
+            set_Nodos.append(column[x].value)
         #fi
     #rof
 
-    ## ORDERS (param_Ordenes)
-    param_Ords = []
+    ## ORDERS (set_Ords)
+    set_Ords = []
     column = sheetDatos['B']
     for x in range(len(column)): 
         if (type(column[x].value) != str and column[x].value != None):
-            param_Ords.append(column[x].value)
+            set_Ords.append(column[x].value)
         #fi
     #rof
 
 
-    ## REFERENCES (param_Referencias)
-    param_Referencias = []
+    ## REFERENCES (set_Referencias)
+    set_Referencias = []
     column = sheetDatos['C']
     for x in range(len(column)): 
         if (type(column[x].value) != str and column[x].value != None):
-            param_Referencias.append(column[x].value)
+            set_Referencias.append(column[x].value)
         #fi
     #rof
 
@@ -174,12 +174,12 @@ def read_data_XLSX( receivedFile ):
             lect.append(column[x].value)
         #fi
     #rof
-    param_NOD_REF = dict(zip(param_Referencias, lect))
+    param_NOD_REF = dict(zip(set_Referencias, lect))
 
 
-    ## Ordenes y Variable auxiliar (param_ORDENES y param_R)
+    ## Ordenes y Variable auxiliar (set_Ordenes y set_R)
     lect = []
-    for i in range(len(param_Ords)):
+    for i in range(len(set_Ords)):
         column = sheetDatos[get_column_letter( 8 + i )]
         orden = []
         for x in range(len(column)): 
@@ -189,13 +189,13 @@ def read_data_XLSX( receivedFile ):
         #rof
         lect.append(orden)
     #rof
-    param_Ordenes = dict(zip(param_Ords, lect))
+    set_Ordenes = dict(zip(set_Ords, lect))
 
     lectR = copy.deepcopy(lect) ## Esto es demencial
     for x in lectR:
         x.remove(0)
     #rof
-    param_R = dict(zip(param_Ords, lectR))
+    set_R = dict(zip(set_Ords, lectR))
 
 
     ## DISTANCE MATRIX
@@ -210,27 +210,27 @@ def read_data_XLSX( receivedFile ):
     #rof
     ## -------------------------------------------------------------------------------
     
-    return( param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia )
+    return( set_Nodos, set_Ords, set_Referencias, param_NOD_REF, set_Ordenes, set_R, param_Distancia )
 #fed
 ######################################################################################################################################    
     
 
 ######################################################################################################################################
-def create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, param_NOD_REF, param_Ordenes, param_R, param_Distancia ):
+def create_lineal_model_Picking( model, set_Nodos, set_Ords, set_Referencias, param_NOD_REF, set_Ordenes, set_R, param_Distancia ):
     
 
     ## ------------------- SETS --------------------------------
-    model.NODOS = pyo.Set( initialize = param_Nodos )
-    model.O = pyo.Set( initialize = param_Ords )
-    model.REF = pyo.Set( initialize = param_Referencias )
+    model.NODOS = pyo.Set( initialize = set_Nodos )
+    model.O = pyo.Set( initialize = set_Ords )
+    model.REF = pyo.Set( initialize = set_Referencias )
     def setORDENES(model, i):
-        return(list(param_Ordenes[i]))
+        return(list(set_Ordenes[i]))
     #fed
     model.ORDENES = pyo.Set(model.O, initialize = setORDENES)
     def setR(model, i):
-        return(list(param_R[i]))
+        return(list(set_R[i]))
     #fed
-    model.R = pyo.Set(model.O, initialize = param_R)
+    model.R = pyo.Set(model.O, initialize = set_R)
 
 
 
@@ -266,10 +266,10 @@ def create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, para
     #fed
     model.Nod_Ref = pyo.Param(model.REF, initialize = paramNodRef) 
 
-    def dinit(model, i ,j):
+    def paramDistR(model, i ,j):
         return model.Distancia[model.Nod_Ref[i],model.Nod_Ref[j]]
     #fed
-    model.Distancia_R = pyo.Param(model.REF, model.REF, initialize = dinit, mutable = True)
+    model.Distancia_R = pyo.Param(model.REF, model.REF, initialize = paramDistR, mutable = True)
 
     ## ----------------------- VARIABLES ---------------------------------------
     model.x = pyo.Var(model.OROR, domain = pyo.Binary)
@@ -319,7 +319,7 @@ def create_lineal_model( model, param_Nodos, param_Ords, param_Referencias, para
     
     
 #########################################################################################################################################
-def print_results_XLSX( workbook, instance ):
+def print_results_XLSX_Picking( workbook, instance ):
     ## -------------------------- SAVE RESULTS IN EXCEL FILE -------------------------------------
 
     ## STYLES
@@ -331,13 +331,13 @@ def print_results_XLSX( workbook, instance ):
         
     ## CREATE SHEET
     worksheet = workbook.add_worksheet('Resultados')
-    worksheet.set_column(0, 0, 20)
+    worksheet.set_column(0, 0, 20) ## Width: set_column(first_col, last_col, width, cell_format, options)
 
+    ## PRINT RESULTS
     worksheet.merge_range(0, 0, 0, 3, "SOLUCIÓN DEL EJERCICIO", merge_format)
     worksheet.write(1, 0, "Distancia Total: ", merge_format)
     worksheet.write(1, 1, pyo.value(instance.FO), cell_format)
-
-    ## PRINT RESULTS
+    
     row=3
     col=0
     for o in instance.O:
@@ -355,9 +355,9 @@ def print_results_XLSX( workbook, instance ):
             for j in instance.ORDENES[o]:
                 if ( instance.x[o,i,j].value == 1):
                     worksheet.write(row, col + 0,"Del rack ", cell_format)
-                    worksheet.write(row, col + 1,i, cell_format)
+                    worksheet.write(row, col + 1, i, cell_format)
                     worksheet.write(row, col + 2," al rack", cell_format)
-                    worksheet.write(row, col + 3,j, cell_format)
+                    worksheet.write(row, col + 3, j, cell_format)
                 #fi
             #rof
             row += 1
