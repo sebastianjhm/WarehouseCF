@@ -15,11 +15,7 @@ export class FilesServiceService {
     console.log('Send file picking');
     const sendFormDataPicking = new FormData();
     sendFormDataPicking.append('myExcelFile', ReceivedFilePicking[0]);
-    return this.http.post(this.url + '/postFile' , sendFormDataPicking, {responseType: 'arraybuffer'});
-  }
-
-  postFilesAllocation( ReceivedFile: File[] ) {
-    console.log('Send file allocation');
+    return this.http.post(this.url + '/postFilePicking' , sendFormDataPicking, {responseType: 'arraybuffer'});
   }
 
   getRuta() {
@@ -27,4 +23,13 @@ export class FilesServiceService {
     console.log(this.url + '/rutas');
     return this.http.get<Rutas>(this.url + '/rutas');
   }
+
+  postFilesAllocation( ReceivedFileAllocation: File[] ) {
+    console.log('Send file allocation');
+    const sendFormDataAllocation = new FormData();
+    sendFormDataAllocation.append('myExcelFileAlloc', ReceivedFileAllocation[0]);
+    return this.http.post(this.url + '/postFileAllocation' , sendFormDataAllocation);
+  }
+
+  
 }

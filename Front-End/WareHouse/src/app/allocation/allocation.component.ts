@@ -8,12 +8,15 @@ import { FileSystemFileEntry, NgxFileDropEntry, FileSystemDirectoryEntry } from 
   styleUrls: ['./allocation.component.css']
 })
 export class AllocationComponent implements OnInit {
+  
 
   constructor(  private http: FilesServiceService ) { }
 
   FileNameAlloc: string;
   public ExcelFileAlloc: File;
   public filesArrayAlloc: File[] = [];
+  public fileDownAlloc = undefined;
+  public llegoServicio: boolean = false;
 
   public inputFileAlloc(file: File) {
     this.ExcelFileAlloc = file[0];
@@ -47,11 +50,25 @@ export class AllocationComponent implements OnInit {
 
   sendFilesAlloc() {
     console.log('Lo recibí');
-    // if (this.filesArrayAlloc[0]) {
-    //   this.http.postFilesAllocation(this.filesArrayAlloc).subscribe(
+    if (this.filesArrayAlloc[0]) {
+      this.http.postFilesAllocation(this.filesArrayAlloc).subscribe(
+        response => {
+          console.log(".");
+          console.log(response);
+          // this.convertBLOBtoXLSX(response);
+        },
+        ( error: any ) => { console.log("error"); console.log(error); },
+          () => { (document.getElementById('button-download') as HTMLInputElement).disabled = false; }
+        );
+    }
+  }
 
-    //   );
-    // }
+  convertBLOBtoXLSX(data: any) {
+    this.fileDownAlloc = new Blob([data], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    console.log(this.fileDownAlloc);
+    this.llegoServicio = true;
   }
 
   public fileOver(event: any) {
@@ -63,6 +80,7 @@ export class AllocationComponent implements OnInit {
   }
 
   ngOnInit() {
+    (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
 
 }

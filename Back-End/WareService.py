@@ -15,10 +15,25 @@ pyutilib.subprocess.GlobalData.DEFINE_SIGNAL_HANDLERS_DEFAULT = False
 app = Flask(__name__)
 cors = CORS(app)
 
+@app.route('/postFileAllocation', methods=['POST'])
+@cross_origin()
+def post_allocation():
+    
+    ## SAVE EXCEL FILE THAT ARRIVE OF THE FRONT
+    receivedFile = request.files["myExcelFileAlloc"]
+    print(receivedFile)
+    
+    ## OPEN FILE AND SAVE IN VARIABLE (archivo)
+    archivo = openpyxl.load_workbook(receivedFile, data_only = True)
+
+    ## READ SHEETS OF FILE AND SELECT THE THE FIRST SHEET
+    sheets = archivo.sheetnames
+    print(sheets)
+    return jsonify({"x":"sapoperro"})
+#fed
 
 
-
-@app.route('/postFile', methods=['POST'])
+@app.route('/postFilePicking', methods=['POST'])
 @cross_origin()
 def post_picking():
     
@@ -39,7 +54,7 @@ def post_picking():
     
     ## CREATE AN INSTANCE OF THE MODEL, SOLVE PRINT RESULTS BY CONSOLE
     instance = model.create_instance()
-    opt.options['timelimit'] = 60
+    opt.options['timelimit'] = 6
     results = opt.solve(instance, tee=False)
     #instance.display()
     

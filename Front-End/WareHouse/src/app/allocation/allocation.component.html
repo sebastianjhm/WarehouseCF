@@ -38,7 +38,7 @@
       <!--Si no muestra el nombre del archivo ingresado-->
       <ng-template #empty  class="else">
         <div class="else">
-          <span>{{FileName}}</span>
+          <span>{{FileNameAlloc}}</span>
         </div>
       </ng-template>
       <!-------------------------------------------------------------------->
@@ -49,6 +49,13 @@
   </ngx-file-drop>
 </div>
 
+<br>
+<div style="text-align: center;">
+  <button class="btn btn-primary" (click)=downloadFileAlloc() id="button-download">DOWNLOAD</button>
+</div>
+
+<br>
+<br>
 
 <!----------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------->

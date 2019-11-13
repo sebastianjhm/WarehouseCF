@@ -23,7 +23,7 @@ export class PickingLPComponent implements OnInit {
   public ExcelFile: File;
   public filesArray: File[] = [];
   public fileD = undefined;
-  public llegoServicio = false;
+  public llegoServicio: boolean = false;
 
   // Variables Ruta
   public receivedRuta: Rutas;
