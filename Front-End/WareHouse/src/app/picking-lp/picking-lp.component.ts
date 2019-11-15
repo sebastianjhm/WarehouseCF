@@ -19,20 +19,20 @@ export class PickingLPComponent implements OnInit {
   itemsPorPagina = 1;
 
   // Variables Archivo
-  FileName: string;
-  public ExcelFile: File;
-  public filesArray: File[] = [];
-  public fileD = undefined;
+  public FileNamePicking: string;
+  public ExcelFilePicking: File;
+  public filesArrayPicking: File[] = [];
+  public fileDownPicking = undefined;
   public llegoServicio: boolean = false;
 
   // Variables Ruta
   public receivedRuta: Rutas;
 
   public inputFile(file: File) {
-    this.ExcelFile = file[0];
-    this.FileName = file[0].name;
-    console.log(this.ExcelFile);
-    this.filesArray[0] = this.ExcelFile;
+    this.ExcelFilePicking = file[0];
+    this.FileNamePicking = file[0].name;
+    console.log(this.ExcelFilePicking);
+    this.filesArrayPicking[0] = this.ExcelFilePicking;
     this.sendFiles();
   }
 
@@ -46,9 +46,9 @@ export class PickingLPComponent implements OnInit {
         fileEntry.file((file: File) => {
           // Here you can access the real file
           // console.log(droppedFile.relativePath, file);
-          this.ExcelFile = file;
-          this.FileName = this.ExcelFile.name;
-          this.filesArray[0] = this.ExcelFile;
+          this.ExcelFilePicking = file;
+          this.FileNamePicking = this.ExcelFilePicking.name;
+          this.filesArrayPicking[0] = this.ExcelFilePicking;
           this.sendFiles();
         });
       } else {
@@ -59,41 +59,49 @@ export class PickingLPComponent implements OnInit {
   }
 
   sendFiles() {
-    if (this.filesArray[0]) {
-      this.http.postFilesPicking(this.filesArray).subscribe(
+    if (this.filesArrayPicking[0]) {
+      this.http.postFilesPicking(this.filesArrayPicking).subscribe(
+
         response => {
           console.log(response);
           this.convertBLOBtoXLSX(response);
         },
+
         error => { console.log(error); },
+
         () => {
           this.getTabla();
+          this.llegoServicio = true;
           (document.getElementById('button-download') as HTMLInputElement).disabled = false;
         }
+
       );
     }
   }
 
   convertBLOBtoXLSX(data: any) {
-    this.fileD = new Blob([data], {
+    this.fileDownPicking = new Blob([data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-    console.log(this.fileD);
-    this.llegoServicio = true;
+    console.log(this.fileDownPicking);
   }
 
 
   getTabla() {
     this.http.getRuta().subscribe(
+
       (data: Rutas) => { this.receivedRuta = data; },
+
       error => { console.log(error); },
+
       () => { console.log(this.receivedRuta); }
+
     );
   }
 
   downloadFile() {
     if (this.llegoServicio === true) {
-      saveAs(this.fileD, 'Results' + '.xlsx');
+      saveAs(this.fileDownPicking, 'Resultados_Picking' + '.xlsx');
     }
   }
 

@@ -29,7 +29,7 @@
 
 
       <!--Si no se ha arrastrado ningún archivo muestra mensaje por defecto-->
-      <div *ngIf="!ExcelFile; else empty"  id="ngx-text">
+      <div *ngIf="!ExcelFilePicking; else empty"  id="ngx-text">
         <img width="40" src="./assets/upload-button.svg">
         <br>
         <span>Drag your file here :)</span>
@@ -37,7 +37,7 @@
       <!--Si no muestra el nombre del archivo ingresado-->
       <ng-template #empty  class="else">
         <div class="else">
-          <span>{{FileName}}</span>
+          <span>{{FileNamePicking}}</span>
         </div>
       </ng-template>
       <!-------------------------------------------------------------------->

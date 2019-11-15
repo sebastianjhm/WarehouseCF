@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesServiceService } from '../Service/files-service.service';
 import { FileSystemFileEntry, NgxFileDropEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-allocation',
@@ -12,7 +13,7 @@ export class AllocationComponent implements OnInit {
 
   constructor(  private http: FilesServiceService ) { }
 
-  FileNameAlloc: string;
+  public FileNameAlloc: string;
   public ExcelFileAlloc: File;
   public filesArrayAlloc: File[] = [];
   public fileDownAlloc = undefined;
@@ -52,23 +53,34 @@ export class AllocationComponent implements OnInit {
     console.log('Lo recibí');
     if (this.filesArrayAlloc[0]) {
       this.http.postFilesAllocation(this.filesArrayAlloc).subscribe(
+
         response => {
-          console.log(".");
           console.log(response);
-          // this.convertBLOBtoXLSX(response);
+          this.convertBLOBtoXLSX(response);
         },
-        ( error: any ) => { console.log("error"); console.log(error); },
-          () => { (document.getElementById('button-download') as HTMLInputElement).disabled = false; }
-        );
+
+        ( error: any ) => { console.log("Error en el servicio"); console.log(error); },
+
+        () => { 
+          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
+          this.llegoServicio = true;
+        }
+
+      );
     }
   }
 
-  convertBLOBtoXLSX(data: any) {
+  convertBLOBtoXLSX( data: any ) {
     this.fileDownAlloc = new Blob([data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
     console.log(this.fileDownAlloc);
-    this.llegoServicio = true;
+  }
+
+  downloadFileAlloc() {
+    if (this.llegoServicio === true) {
+      saveAs(this.fileDownAlloc, 'Resultados_Asignacion' + '.xlsx');
+    }
   }
 
   public fileOver(event: any) {

@@ -28,7 +28,7 @@ export class FilesServiceService {
     console.log('Send file allocation');
     const sendFormDataAllocation = new FormData();
     sendFormDataAllocation.append('myExcelFileAlloc', ReceivedFileAllocation[0]);
-    return this.http.post(this.url + '/postFileAllocation' , sendFormDataAllocation);
+    return this.http.post(this.url + '/postFileAllocation' , sendFormDataAllocation, {responseType: 'arraybuffer'});
   }
 
   
