@@ -23,10 +23,10 @@ export class PickingLPComponent implements OnInit {
   public ExcelFilePicking: File;
   public filesArrayPicking: File[] = [];
   public fileDownPicking = undefined;
-  public llegoServicio: boolean = false;
 
-  // Variables Ruta
+  // Variables del servicio Ruta
   public receivedRuta: Rutas;
+  public llegoServicio = false;
 
   public inputFile(file: File) {
     this.ExcelFilePicking = file[0];
@@ -45,7 +45,6 @@ export class PickingLPComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           // Here you can access the real file
-          // console.log(droppedFile.relativePath, file);
           this.ExcelFilePicking = file;
           this.FileNamePicking = this.ExcelFilePicking.name;
           this.filesArrayPicking[0] = this.ExcelFilePicking;
@@ -70,7 +69,7 @@ export class PickingLPComponent implements OnInit {
         error => { console.log(error); },
 
         () => {
-          this.getTabla();
+          this.getTablaPicking();
           this.llegoServicio = true;
           (document.getElementById('button-download') as HTMLInputElement).disabled = false;
         }
@@ -87,7 +86,7 @@ export class PickingLPComponent implements OnInit {
   }
 
 
-  getTabla() {
+  getTablaPicking() {
     this.http.getRuta().subscribe(
 
       (data: Rutas) => { this.receivedRuta = data; },
@@ -114,7 +113,7 @@ export class PickingLPComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getTabla();
+    this.getTablaPicking();
     (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
 

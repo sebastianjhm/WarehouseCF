@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Rutas } from '../Clases/Rutas';
+import { Racks } from '../Clases/Racks';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class FilesServiceService {
   }
 
   getRuta() {
-    console.log('Estoy trayendo el json');
+    console.log('Trayendo Data Picking');
     console.log(this.url + '/rutas');
     return this.http.get<Rutas>(this.url + '/rutas');
   }
@@ -31,5 +32,10 @@ export class FilesServiceService {
     return this.http.post(this.url + '/postFileAllocation' , sendFormDataAllocation, {responseType: 'arraybuffer'});
   }
 
-  
+  getRacks() {
+    console.log('trayendo Data allocation');
+    console.log(this.url + '/racks');
+    return this.http.get<Racks>(this.url + '/racks');
+  }
+
 }

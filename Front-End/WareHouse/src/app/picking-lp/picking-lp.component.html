@@ -54,7 +54,6 @@
   <div >
     <table class="table" aria-describedby="mydesc">
       <thead>
-        
         <tr>
           <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
         </tr>
@@ -62,7 +61,8 @@
           <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
         </tr>
       </thead>
-      <tbody *ngFor="let r of receivedRuta.ruta| paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
+
+      <tbody *ngFor="let r of receivedRuta.ruta | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
   
         <!-- Número de Ruta -->
         <tr>
@@ -83,6 +83,7 @@
         </tr>
   
       </tbody>
+
     </table>  
   </div>
     

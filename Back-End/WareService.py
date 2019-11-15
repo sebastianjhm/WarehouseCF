@@ -8,6 +8,7 @@ from pyomo.opt import SolverFactory
 import copy
 import pyutilib.subprocess.GlobalData
 from Rutas import Rutas
+from Racks import Racks
 
 ## Librería para que pyomo corra dentro de Flask
 pyutilib.subprocess.GlobalData.DEFINE_SIGNAL_HANDLERS_DEFAULT = False
@@ -36,6 +37,11 @@ def post_allocation():
     results = opt.solve(instance, tee = False)
     #instance.display()
     
+    ## SAVE JSON ROUTES
+    Racks["fo"] = 0
+    Rutas["racks"] = []
+    save_racks_Alloc( instance )
+    
     ## PRINT RESULTS IN CONSOLE
     print_results_in_console_Alloc( instance )
     
@@ -44,6 +50,54 @@ def post_allocation():
     print_results_XLSX_Alloc( workbook, instance )
      
     return send_file('Results_Allocation.xlsx', as_attachment=True)
+#fed
+    
+@app.route('/racks', methods = ['GET'])
+@cross_origin()
+def get_racks_Alloc():
+    return jsonify(Racks)
+#fed
+
+
+
+
+def save_racks_Alloc( instance ):
+    
+    Racks["fo"] = pyo.value(instance.FO)
+    new_rack = {"id":0, "hileras": False, "referencias": []}
+    
+    for rack in instance.RACKS:
+        nr = copy.deepcopy( new_rack )
+        nr["id"] = rack
+        if (instance.y[rack] == 1):
+            nr["hileras"] = True
+        else:
+            nr["hileras"] = False
+        #fi
+        for ref in instance.REF:
+            if ( instance.x[ref,rack] == 1 ):
+                nr["referencias"].append(ref)
+            #fi
+        #rof
+        Racks["racks"].append(nr)
+    #rof
+    print(Racks)
+#fed
+    
+def print_results_in_console_Alloc( instance ):
+    print("\n\n")
+    print("SOLUCIÓN DEL EJERCICIO")
+    print("--------------------------")
+    print("\n")
+    print("Función Objetivo: ",pyo.value(instance.FO))
+    print("\n")
+    for ref in instance.REF:
+        for rack in instance.RACKS:
+            if ( instance.x[ref,rack] == 1 ):
+                print("La referencia ", ref ," en el rack", rack)
+            #fi
+        #rof
+    #rof
 #fed
 
 def read_data_XLSX_Alloc( receivedFile ):
@@ -310,21 +364,7 @@ def print_results_XLSX_Alloc( workbook, instance ):
 #fed
 
 
-def print_results_in_console_Alloc( instance ):
-    print("\n\n")
-    print("SOLUCIÓN DEL EJERCICIO")
-    print("--------------------------")
-    print("\n")
-    print("Función Objetivo: ",pyo.value(instance.FO))
-    print("\n")
-    for ref in instance.REF:
-        for rack in instance.RACKS:
-            if ( instance.x[ref,rack] == 1 ):
-                print("La referencia ", ref ," en el rack", rack)
-            #fi
-        #rof
-    #rof
-#fed
+
 
 
 
@@ -379,7 +419,7 @@ def post_picking():
     
     ## CREATE AN INSTANCE OF THE MODEL, SOLVE PRINT RESULTS BY CONSOLE
     instance = model.create_instance()
-    opt.options['timelimit'] = 6
+    opt.options['timelimit'] = 10
     results = opt.solve(instance, tee=False)
     #instance.display()
     
@@ -437,7 +477,6 @@ def print_results_in_console_Picking( instance ):
             #rof
         #rof
     #rof
-    
 #fed
     
 def save_routes_Picking( instance ):
