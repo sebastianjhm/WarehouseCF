@@ -29,6 +29,10 @@ export class AllocationComponent implements OnInit {
   public receivedRacksPrint: Racks = {fo: 0, racks: []};
   public nr: Rack;
 
+  // Variables del filtro
+  public busqueda: any;
+  public filterValue: any = undefined;
+
   public inputFileAlloc(file: File) {
     this.ExcelFileAlloc = file[0];
     this.FileNameAlloc = file[0].name;
@@ -138,4 +142,22 @@ export class AllocationComponent implements OnInit {
     (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
 
+  public verifica: boolean;
+  buscar(receivedFilter: any) {
+    console.log(receivedFilter);
+    if ( receivedFilter === undefined ) {
+      this.filterValue = undefined;
+    } else if ( receivedFilter === null ) {
+      this.filterValue = null;
+    } else {
+      this.filterValue = Number(receivedFilter); // parseInt(numero, base)
+
+      this.verifica = false;
+      if ( this.receivedRacks.racks[this.filterValue - 1].referencias.length > 0 ) {
+        this.verifica = true;
+      }
+
+      console.log(this.verifica);
+    }
+  }
 }

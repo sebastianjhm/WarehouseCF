@@ -123,3 +123,8 @@ table{
     display: flex;
     justify-content: center;
 }
+
+.i1{
+    width: 200px;
+    margin-right: 20px;
+}
