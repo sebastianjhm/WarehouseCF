@@ -9,6 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PickingLPComponent } from './picking-lp/picking-lp.component';
 import { AllocationComponent } from './allocation/allocation.component';
 import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { FormsModule } from '@angular/forms';
     NgxFileDropModule,
     HttpClientModule,
     NgxPaginationModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -16,6 +16,8 @@ export class AllocationComponent implements OnInit {
   // Variables de la paginación pageActual: numero de pagina; itemsPorPagina: su nombre lo dice
   pageActual = 1;
   itemsPorPagina = 1;
+  pageActual2 = 1;
+  itemsPorPagina2 = 10;
 
   // Variables Archivo de entrada
   public FileNameAlloc: string;
@@ -27,6 +29,7 @@ export class AllocationComponent implements OnInit {
   public receivedRacks: Racks;
   public llegoServicio = false;
   public receivedRacksPrint: Racks = {fo: 0, racks: []};
+  public receivedRacksRefPrint: [number, number][] = [];
   public nr: Rack;
 
   // Variables del filtro
@@ -127,6 +130,28 @@ export class AllocationComponent implements OnInit {
     }
     console.log('.');
     console.log(this.receivedRacksPrint);
+    this.getRacksRefPrint();
+  }
+
+  getRacksRefPrint() {
+    for ( const rack of this.receivedRacksPrint.racks ) {
+      for ( const ref of rack.referencias ) {
+        this.receivedRacksRefPrint.push([Number(ref), Number(rack.id)]);
+      }
+    }
+
+    let aux: [number, number];
+    for ( let i = 0; i < this.receivedRacksRefPrint.length; i++ ) {
+      for ( let j = i; j < this.receivedRacksRefPrint.length; j++ ) {
+        if ( this.receivedRacksRefPrint[i][0] > this.receivedRacksRefPrint[j][0] ) {
+          aux = this.receivedRacksRefPrint[i];
+          this.receivedRacksRefPrint[i] = this.receivedRacksRefPrint[j];
+          this.receivedRacksRefPrint[j] = aux;
+        }
+      }
+    }
+
+    console.log(this.receivedRacksRefPrint);
   }
 
   public fileOver(event: any) {
@@ -158,6 +183,20 @@ export class AllocationComponent implements OnInit {
       }
 
       console.log(this.verifica);
+    }
+  }
+
+  public busquedaRef: any;
+  public filterValueRef: any = undefined;
+
+  buscarRef(receivedFilterRef: any) {
+    console.log(receivedFilterRef);
+    if ( receivedFilterRef === undefined ) {
+      this.filterValueRef = undefined;
+    } else if ( receivedFilterRef === null ) {
+      this.filterValueRef = null;
+    } else {
+      this.filterValueRef = Number(receivedFilterRef); // parseInt(numero, base)
     }
   }
 }

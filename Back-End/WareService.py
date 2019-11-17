@@ -419,7 +419,7 @@ def post_picking():
     
     ## CREATE AN INSTANCE OF THE MODEL, SOLVE PRINT RESULTS BY CONSOLE
     instance = model.create_instance()
-    opt.options['timelimit'] = 10
+    opt.options['timelimit'] = 20
     results = opt.solve(instance, tee=False)
     #instance.display()
     

@@ -13,7 +13,7 @@
   <input type="file" onclick="this.value = null" (change) ="inputFileAlloc($event.target.files)"  accept=".xls, .xlsx" value="">
 
   <div class="title">
-    <span class="title_text">Excel File</span>
+    <span class="title_text">Excel Data File</span>
     <img class="image" src="./assets/paperclip.svg">
   </div>
 </label>
@@ -49,104 +49,234 @@
   </ngx-file-drop>
 </div>
 
+
+
+
+
+
+
 <br>
+<br>
+<div class="principal-title">
+  <span>Results</span> 
+  <img class="checked" src="./assets/checked_green.svg">
+</div>
 <br>
 
-<div class="pag-section">
-  <input [(ngModel)]="busqueda" type="number" min=1 class="form-control i1" placeholder="Busqueda">
-  <button class="btn btn-primary" (click)='buscar(busqueda)'>SEARCH</button>
+<div class="pag-section" *ngIf="receivedRacks">
+  <div class="card results">
+    <div class="card-body">
+      <ngb-tabset style="font-family: 'Lato', sans-serif;">
+
+
+
+        <ngb-tab>
+          <ng-template ngbTabTitle>Res. References</ng-template>
+          <ng-template ngbTabContent>
+
+            <br>
+            <br>
+            <div class="pag-section">
+              <span class="filter">
+                FILTER<img class="filter-img" src="./assets/filter-black.svg">
+              </span>
+              <span style="font-size: 15px;font-weight: bold;margin-top: 7px;">--></span>
+              <input [(ngModel)]="busquedaRef" type="number" min=1 class="form-control i1" placeholder="Reference">
+              <button class="btn btn-primary search" (click)='buscarRef(busquedaRef)'>SEARCH</button>
+            </div>
+            <br>
+            <br>
+
+            <ng-container *ngIf="filterValueRef === null || filterValueRef === undefined; else optionRef">
+                <div>
+                    <table  class="table" aria-describedby="mydesc">
+                      <thead>
+                        <tr>
+                          <th scope="col" colspan="4">UBICACIÓN DE REFERENCIAS EN RACK</th>
+                        </tr>
+                        <tr>
+                          <th scope="col" colspan="4">Función objetivo: {{receivedRacksPrint.fo}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="col" colspan="4">Asignación</th>
+                        </tr>
+                        <tr *ngFor="let r of receivedRacksRefPrint | paginate: {itemsPerPage:10, currentPage: p}">
+                          <td>La referencia</td>
+                          <td>{{r[0]}}</td>
+                          <td>en el rack</td>
+                          <td>{{r[1]}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    
+                    <div class="pag-section">
+                      <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="p = $event" 
+                      class="paginator"></pagination-controls>
+                    </div>
+                  </div>
+            </ng-container>
+
+            <ng-template #optionRef>
+              <table  class="table" aria-describedby="mydesc">
+                <thead>
+                  <tr>
+                    <th scope="col" colspan="4">UBICACIÓN DE REFERENCIAS EN RACK</th>
+                  </tr>
+                  <tr>
+                    <th scope="col" colspan="4">Función objetivo: {{receivedRacksPrint.fo}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="col" colspan="4">Asignación</th>
+                  </tr>
+                  <tr *ngFor="let r of receivedRacksRefPrint; let j = index">
+                    <ng-container *ngIf="r[0] === filterValueRef">
+                      <td>La referencia</td>
+                      <td>{{r[0]}}</td>
+                      <td>en el rack</td>
+                      <td>{{r[1]}}</td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+            
+            
+          </ng-template>
+        </ngb-tab>
+
+
+
+
+
+
+
+        <ngb-tab>
+          <ng-template ngbTabTitle>Res. Racks</ng-template>
+
+          <ng-template ngbTabContent>
+            <br>
+            <br>
+            
+            <div class="pag-section">
+              <span class="filter">
+                FILTER<img class="filter-img" src="./assets/filter-black.svg">
+              </span>
+              <span style="font-size: 15px;font-weight: bold;margin-top: 7px;">--></span>
+              <input [(ngModel)]="busqueda" type="number" min=1 class="form-control i1" placeholder="Rack">
+              <button class="btn btn-primary" (click)='buscar(busqueda)'>SEARCH</button>
+            </div>
+
+            <br>
+            <br>
+
+            <ng-container *ngIf="filterValue === null || filterValue === undefined; else option2">
+              <div *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0">
+                <table  class="table" aria-describedby="mydesc">
+                  <thead>
+                    <tr>
+                      <th scope="col" colspan="3">UBICACIÓN DE REFERENCIAS</th>
+                    </tr>
+                    <tr>
+                      <th scope="col" colspan="3">Función objetivo: {{receivedRacksPrint.fo}}</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody *ngFor="let x of receivedRacksPrint.racks | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
+                    <tr>
+                      <th scope="col" colspan="3">Asignación Rack #{{receivedRacksPrint.racks[pageActual-1].id}}</th>
+                    </tr>
+              
+                    <tr>
+                      <th scope="col" style='width: 33.333333%;'>RACK</th>
+                      <th scope="col" style='width: 33.333333%;'>REFERENCIA</th>
+                      <th scope="col">¿HILERAS?</th>
+                    </tr>
+                
+                    <tr *ngFor="let y of receivedRacksPrint.racks[pageActual-1].referencias; let j = index">
+                      <td>{{receivedRacksPrint.racks[pageActual-1].id}}</td>
+                      <td>{{receivedRacksPrint.racks[pageActual-1].referencias[j]}}</td>
+                      <td>{{receivedRacksPrint.racks[pageActual-1].hileras}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <div class="pag-section">
+                  <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
+                  class="paginator"></pagination-controls>
+                </div>
+              </div>
+            </ng-container>
+            
+            <ng-template #option2>
+              <div *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0">
+                <table  class="table" aria-describedby="mydesc">
+              
+                  <thead>
+                    <tr>
+                      <th scope="col" colspan="3">UBICACIÓN DE REFERENCIAS</th>
+                    </tr>
+                    <tr>
+                      <th scope="col" colspan="3">Función objetivo: {{receivedRacksPrint.fo}}</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                    
+                    <tr>
+                      <th scope="col" colspan="3">Asignación</th>
+                    </tr>
+              
+                    <tr>
+                      <th scope="col" style='width: 33.333333%;'>RACK</th>
+                      <th scope="col" style='width: 33.333333%;'>REFERENCIA</th>
+                      <th scope="col">¿HILERAS?</th>
+                    </tr>
+                    
+                    <ng-container *ngFor="let x of receivedRacksPrint.racks ; let i = index">
+                      
+                      <tr *ngFor="let y of receivedRacksPrint.racks[i].referencias; let j = index">
+            
+                        <ng-container *ngIf="receivedRacksPrint.racks[i].id === filterValue">
+                          <td>{{receivedRacksPrint.racks[i].id}}</td>
+                          <td>{{receivedRacksPrint.racks[i].referencias[j]}}</td>
+                          <td>{{receivedRacksPrint.racks[i].hileras}}</td>
+                        </ng-container>
+                        
+                      </tr>
+                      
+                    </ng-container>
+                    
+                    
+                  </tbody>
+                
+                </table>
+              </div>
+            </ng-template>
+
+          </ng-template>
+
+        </ngb-tab>
+      </ngb-tabset>
+    </div>
+  </div>
 </div>
 
 
-<br>
-<br>
 
-<!-- OPTION 2: FLUID SOLUTION-->
-
-
-<ng-container *ngIf="filterValue === null || filterValue === undefined; else option2">
-  <div *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0">
-    <table  class="table" aria-describedby="mydesc">
-      <thead>
-        <tr>
-          <th scope="col" colspan="3">UBICACIÓN DE REFERENCIAS</th>
-        </tr>
-        <tr>
-          <th scope="col" colspan="3">Función objetivo: {{receivedRacksPrint.fo}}</th>
-        </tr>
-      </thead>
-      
-      <tbody *ngFor="let x of receivedRacksPrint.racks | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
-        <tr>
-          <th scope="col" colspan="3">Asignación Rack #{{receivedRacksPrint.racks[pageActual-1].id}}</th>
-        </tr>
   
-        <tr>
-          <th scope="col" style='width: 33.333333%;'>RACK</th>
-          <th scope="col" style='width: 33.333333%;'>REFERENCIA</th>
-          <th scope="col">¿HILERAS?</th>
-        </tr>
-    
-        <tr *ngFor="let y of receivedRacksPrint.racks[pageActual-1].referencias; let j = index">
-          <td>{{receivedRacksPrint.racks[pageActual-1].id}}</td>
-          <td>{{receivedRacksPrint.racks[pageActual-1].referencias[j]}}</td>
-          <td>{{receivedRacksPrint.racks[pageActual-1].hileras}}</td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <div class="pag-section">
-      <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
-      class="paginator"></pagination-controls>
-    </div>
-  </div>
-</ng-container>
 
-<ng-template #option2>
-  <div *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0">
-    <table  class="table" aria-describedby="mydesc">
-  
-      <thead>
-        <tr>
-          <th scope="col" colspan="3">UBICACIÓN DE REFERENCIAS</th>
-        </tr>
-        <tr>
-          <th scope="col" colspan="3">Función objetivo: {{receivedRacksPrint.fo}}</th>
-        </tr>
-      </thead>
-      
-      <tbody>
-        
-        <tr>
-          <th scope="col" colspan="3">Asignación</th>
-        </tr>
-  
-        <tr>
-          <th scope="col" style='width: 33.333333%;'>RACK</th>
-          <th scope="col" style='width: 33.333333%;'>REFERENCIA</th>
-          <th scope="col">¿HILERAS?</th>
-        </tr>
-        
-        <ng-container *ngFor="let x of receivedRacksPrint.racks ; let i = index">
-          
-          <tr *ngFor="let y of receivedRacksPrint.racks[i].referencias; let j = index">
 
-            <ng-container *ngIf="receivedRacksPrint.racks[i].id === filterValue">
-              <td>{{receivedRacksPrint.racks[i].id}}</td>
-              <td>{{receivedRacksPrint.racks[i].referencias[j]}}</td>
-              <td>{{receivedRacksPrint.racks[i].hileras}}</td>
-            </ng-container>
-            
-          </tr>
-          
-        </ng-container>
-        
-        
-      </tbody>
-    
-    </table>
-  </div>
-</ng-template>
+
+
+
+
+
+
+
 
 <br>
 <div style="text-align: center;">

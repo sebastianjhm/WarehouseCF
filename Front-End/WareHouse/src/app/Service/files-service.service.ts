@@ -33,7 +33,7 @@ export class FilesServiceService {
   }
 
   getRacks() {
-    console.log('trayendo Data allocation');
+    console.log('trayendo Data Allocation');
     console.log(this.url + '/racks');
     return this.http.get<Racks>(this.url + '/racks');
   }
