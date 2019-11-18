@@ -21,6 +21,7 @@ input[type="file"] {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    font-size: 18px;
 }
 
 .title_text{
@@ -40,7 +41,7 @@ input[type="file"] {
 .ngx{
     border-radius: 11px;
     margin-top: -4px;
-    background-color: #e7e7e7;
+    background-color: #d1d1d1;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
@@ -63,7 +64,7 @@ input[type="file"] {
 
 
 .ngx:hover {
-    background-color: #dadada;
+    background-color: #c5c5c5;
 }
 
 .image{
@@ -121,4 +122,88 @@ table{
 .pag-section{
     display: flex;
     justify-content: center;
+}
+
+.checked {
+    height: 20px;
+    margin-left: 7px;
+    margin-bottom: 5px;
+}
+
+svg path{ 
+    fill: #686868;
+}
+
+/* svg:hover path{ 
+  fill: #0782d0;
+} */
+
+.icon-svg{
+    height: 40px;
+}
+
+.data {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 11px;
+    background-color: #d1d1d1;
+    border-color: #d1d1d1;
+    margin-top: 10px;
+}
+
+.s1{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.data-title {
+    height: 37px;
+    background: #8f8f8f;
+    border-radius: 4px;
+    width: 150px;
+    text-align: center;
+    padding-top: 7px;
+    margin-top: 2px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.bd{
+    border: 0px;
+    height: 37px;
+    margin-top: 2px;
+}
+
+.i2 {
+    width: 200px;
+    margin-right: 20px;
+    margin-left: 10px;
+    font-family: 'Lato', sans-serif;
+    height: 40px;
+}
+
+.clock {
+    height: 17px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.clock-d{
+    height: 25px;
+    margin-left: 10px;
+}
+
+
+svg path{ 
+    fill: #686868;
+}
+
+/* svg:hover path{ 
+  fill: #0782d0;
+} */
+
+.icon-svg{
+    height: 40px;
 }

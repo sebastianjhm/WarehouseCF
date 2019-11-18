@@ -32,18 +32,29 @@ export class AllocationComponent implements OnInit {
   public receivedRacksRefPrint: [number, number][] = [];
   public nr: Rack;
 
-  // Variables del filtro
+  // Variables Data section
+  public tmlimitAlloc: any;
+  public valueTmlimitAlloc: number;
+  public disablePopover = false;
+
+  // Variables del filtro1 y filtro2
   public busqueda: any;
   public filterValue: any = undefined;
+  public busquedaRef: any;
+  public filterValueRef: any = undefined;
+  public verifica: boolean; // Variable por utilizar
 
+
+  // =================== Input File Button =======================
   public inputFileAlloc(file: File) {
     this.ExcelFileAlloc = file[0];
     this.FileNameAlloc = file[0].name;
     console.log(this.ExcelFileAlloc);
     this.filesArrayAlloc[0] = this.ExcelFileAlloc;
-    this.sendFilesAlloc();
   }
+  // ==============================================================
 
+  // ======================== Input File Drag and Drop ================================
   public droppedFileAlloc(files: NgxFileDropEntry[]) {
     console.log('dropped');
     console.log(files);
@@ -56,7 +67,6 @@ export class AllocationComponent implements OnInit {
           this.ExcelFileAlloc = file;
           this.FileNameAlloc = this.ExcelFileAlloc.name;
           this.filesArrayAlloc[0] = this.ExcelFileAlloc;
-          this.sendFilesAlloc();
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)
@@ -65,10 +75,39 @@ export class AllocationComponent implements OnInit {
     }
   }
 
-  sendFilesAlloc() {
-    console.log('Lo recibí');
+  public fileOver(event: any) {
+    console.log(event);
+  }
+
+  public fileLeave(event: any) {
+    console.log(event);
+  }
+  // ==================================================================================
+
+  // ================================ Data Section: Function Send Data ==================================
+  sendDataAlloc(tl: any) {
+    let decisor1 = false;
+    let decisor2 = false;
+    if (this.filesArrayAlloc[0]) { decisor1 = true; } else { decisor1 = false; }
+    if ( tl === undefined || tl === null ||  tl <= 0 ) { decisor2 = false; } else { decisor2 = true; }
+
+    console.log(decisor1);
+    console.log(decisor2);
+    this.valueTmlimitAlloc = Number(tl);
+
+    if ( decisor1 === true && decisor2 === true ) {
+      this.disablePopover = true;
+      this.servicePostFilesAlloc();
+    } else {
+      this.disablePopover = false;
+    }
+  }
+  // =====================================================================================================
+
+  // =================== Send Data: Excel File. Receive: File Results and JSON ============================
+  servicePostFilesAlloc() {
     if (this.filesArrayAlloc[0]) {
-      this.http.postFilesAllocation(this.filesArrayAlloc).subscribe(
+      this.http.postFilesAllocation(this.filesArrayAlloc, this.valueTmlimitAlloc).subscribe(
 
         response => {
           console.log(response);
@@ -78,29 +117,35 @@ export class AllocationComponent implements OnInit {
         ( error: any ) => { console.log('Error en el servicio'); console.log(error); },
 
         () => {
-          this.getTablaAllocation();
-          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
+          this.serviceDataJSON();
           this.llegoServicio = true;
+          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
         }
 
       );
     }
   }
+  // ======================================================================================================
 
+  // ================= Convert Blob received in service in XLSX ====================
   convertBLOBtoXLSX( data: any ) {
     this.fileDownAlloc = new Blob([data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
     console.log(this.fileDownAlloc);
   }
+  // ===============================================================================
 
+  // ================== Function Download Results File =======================
   downloadFileAlloc() {
     if (this.llegoServicio === true) {
       saveAs(this.fileDownAlloc, 'Resultados_Asignacion' + '.xlsx');
     }
   }
+  // ==========================================================================
 
-  getTablaAllocation() {
+  // ================== Service GET data Results in JSON ========================
+  serviceDataJSON() {
     this.http.getRacks().subscribe(
 
       (data: Racks) => { this.receivedRacks = data; },
@@ -114,7 +159,9 @@ export class AllocationComponent implements OnInit {
 
     );
   }
+  // =============================================================================
 
+  // ==================== Convert data receives in aveilable to print ==========================
   getRackstoPrint() {
     this.receivedRacksPrint.fo = this.receivedRacks.fo;
     for ( const rack of this.receivedRacks.racks ) {
@@ -132,7 +179,9 @@ export class AllocationComponent implements OnInit {
     console.log(this.receivedRacksPrint);
     this.getRacksRefPrint();
   }
+  // ==============================================================================================
 
+  // ======================== Convert data to second option print =================================
   getRacksRefPrint() {
     for ( const rack of this.receivedRacksPrint.racks ) {
       for ( const ref of rack.referencias ) {
@@ -150,45 +199,10 @@ export class AllocationComponent implements OnInit {
         }
       }
     }
-
-    console.log(this.receivedRacksRefPrint);
   }
+  // ==============================================================================================
 
-  public fileOver(event: any) {
-    console.log(event);
-  }
-
-  public fileLeave(event: any) {
-    console.log(event);
-  }
-
-  ngOnInit() {
-    this.getTablaAllocation();
-    (document.getElementById('button-download') as HTMLInputElement).disabled = true;
-  }
-
-  public verifica: boolean;
-  buscar(receivedFilter: any) {
-    console.log(receivedFilter);
-    if ( receivedFilter === undefined ) {
-      this.filterValue = undefined;
-    } else if ( receivedFilter === null ) {
-      this.filterValue = null;
-    } else {
-      this.filterValue = Number(receivedFilter); // parseInt(numero, base)
-
-      this.verifica = false;
-      if ( this.receivedRacks.racks[this.filterValue - 1].referencias.length > 0 ) {
-        this.verifica = true;
-      }
-
-      console.log(this.verifica);
-    }
-  }
-
-  public busquedaRef: any;
-  public filterValueRef: any = undefined;
-
+  // =============================== Function Filter 1 ===================================
   buscarRef(receivedFilterRef: any) {
     console.log(receivedFilterRef);
     if ( receivedFilterRef === undefined ) {
@@ -199,4 +213,32 @@ export class AllocationComponent implements OnInit {
       this.filterValueRef = Number(receivedFilterRef); // parseInt(numero, base)
     }
   }
+  // ======================================================================================
+
+
+  // ======================================= Function Filter 2 ================================
+  buscarRack(receivedFilter: any) {
+    console.log(receivedFilter);
+    if ( receivedFilter === undefined ) {
+      this.filterValue = undefined;
+    } else if ( receivedFilter === null ) {
+      this.filterValue = null;
+    } else {
+      this.filterValue = Number(receivedFilter); // parseInt(numero, base)
+
+      // Si el rack quedó con referencias
+      this.verifica = false;
+      if ( this.receivedRacks.racks[this.filterValue - 1].referencias.length > 0 ) {
+        this.verifica = true;
+      }
+    }
+  }
+  // ===========================================================================================
+
+  // ======================== Initial Function: Property TypeScript ==========================
+  ngOnInit() {
+    this.serviceDataJSON();
+    (document.getElementById('button-download') as HTMLInputElement).disabled = true;
+  }
+  // =========================================================================================
 }

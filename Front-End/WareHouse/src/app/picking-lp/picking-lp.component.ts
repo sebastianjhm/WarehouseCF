@@ -28,14 +28,21 @@ export class PickingLPComponent implements OnInit {
   public receivedRuta: Rutas;
   public llegoServicio = false;
 
+  // Variables Data section
+  public tmlimitPicking: any;
+  public valueTmlimitPicking: number;
+  public disablePopover = false;
+
+  // =================== Input File Button =======================
   public inputFile(file: File) {
     this.ExcelFilePicking = file[0];
     this.FileNamePicking = file[0].name;
     console.log(this.ExcelFilePicking);
     this.filesArrayPicking[0] = this.ExcelFilePicking;
-    this.sendFiles();
   }
+  // ==============================================================
 
+  // ======================== Input File Drag and Drop ================================
   public droppedFile(files: NgxFileDropEntry[]) {
     console.log('dropped');
     console.log(files);
@@ -48,59 +55,11 @@ export class PickingLPComponent implements OnInit {
           this.ExcelFilePicking = file;
           this.FileNamePicking = this.ExcelFilePicking.name;
           this.filesArrayPicking[0] = this.ExcelFilePicking;
-          this.sendFiles();
         });
       } else {
         // It was a directory (empty directories are added, otherwise only files)
         const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
       }
-    }
-  }
-
-  sendFiles() {
-    if (this.filesArrayPicking[0]) {
-      this.http.postFilesPicking(this.filesArrayPicking).subscribe(
-
-        response => {
-          console.log(response);
-          this.convertBLOBtoXLSX(response);
-        },
-
-        error => { console.log(error); },
-
-        () => {
-          this.getTablaPicking();
-          this.llegoServicio = true;
-          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
-        }
-
-      );
-    }
-  }
-
-  convertBLOBtoXLSX(data: any) {
-    this.fileDownPicking = new Blob([data], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    console.log(this.fileDownPicking);
-  }
-
-
-  getTablaPicking() {
-    this.http.getRuta().subscribe(
-
-      (data: Rutas) => { this.receivedRuta = data; },
-
-      error => { console.log(error); },
-
-      () => { console.log(this.receivedRuta); }
-
-    );
-  }
-
-  downloadFile() {
-    if (this.llegoServicio === true) {
-      saveAs(this.fileDownPicking, 'Resultados_Picking' + '.xlsx');
     }
   }
 
@@ -111,10 +70,87 @@ export class PickingLPComponent implements OnInit {
   public fileLeave(event: any) {
     console.log(event);
   }
+  // ==================================================================================
 
+  // ================================ Data Section: Function Send Data ==================================
+  sendDataPicking(tl: any) {
+    console.log(Number(tl));
+    let decisor1 = false;
+    let decisor2 = false;
+    if (this.filesArrayPicking[0]) { decisor1 = true; } else { decisor1 = false; }
+    if ( tl === undefined || tl === null ||  tl <= 0 ) { decisor2 = false; } else { decisor2 = true; }
+
+    console.log(decisor1);
+    console.log(decisor2);
+    this.valueTmlimitPicking = Number(tl);
+
+    if ( decisor1 === true && decisor2 === true ) {
+      this.disablePopover = true;
+      this.servicePostFilesPicking();
+    } else {
+      this.disablePopover = false;
+    }
+  }
+  // =====================================================================================================
+
+  // =================== Send Data: Excel File. Receive: File Results and JSON ============================
+  servicePostFilesPicking() {
+    if (this.filesArrayPicking[0]) {
+      this.http.postFilesPicking(this.filesArrayPicking, this.valueTmlimitPicking).subscribe(
+
+        response => {
+          console.log(response);
+          this.convertBLOBtoXLSX(response);
+        },
+
+        error => { console.log(error); },
+
+        () => {
+          this.serviceDataJSON();
+          this.llegoServicio = true;
+          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
+        }
+
+      );
+    }
+  }
+  // ======================================================================================================
+
+  // ================= Convert Blob received in service in XLSX ====================
+  convertBLOBtoXLSX(data: any) {
+    this.fileDownPicking = new Blob([data], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    console.log(this.fileDownPicking);
+  }
+  // ===============================================================================
+
+  // ================== Function Download Results File =======================
+  downloadFilePicking() {
+    if (this.llegoServicio === true) {
+      saveAs(this.fileDownPicking, 'Resultados_Picking' + '.xlsx');
+    }
+  }
+  // ==========================================================================
+
+  // ================== Service GET data Results in JSON ========================
+  serviceDataJSON() {
+    this.http.getRuta().subscribe(
+
+      (data: Rutas) => { this.receivedRuta = data; },
+
+      error => { console.log(error); },
+
+      () => { console.log(this.receivedRuta); }
+
+    );
+  }
+  // =============================================================================
+
+  // ======================== Initial Function: Property TypeScript ==========================
   ngOnInit() {
-    this.getTablaPicking();
+    this.serviceDataJSON();
     (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
-
+  // =========================================================================================
 }

@@ -12,10 +12,11 @@ export class FilesServiceService {
 
   url = 'http://localhost:5000';
 
-  postFilesPicking( ReceivedFilePicking: File[] ) {
+  postFilesPicking( ReceivedFilePicking: File[], tmlimit: number) {
     console.log('Send file picking');
     const sendFormDataPicking = new FormData();
     sendFormDataPicking.append('myExcelFile', ReceivedFilePicking[0]);
+    sendFormDataPicking.append('timeLimit', String(tmlimit));
     return this.http.post(this.url + '/postFilePicking' , sendFormDataPicking, {responseType: 'arraybuffer'});
   }
 
@@ -25,10 +26,11 @@ export class FilesServiceService {
     return this.http.get<Rutas>(this.url + '/rutas');
   }
 
-  postFilesAllocation( ReceivedFileAllocation: File[] ) {
+  postFilesAllocation( ReceivedFileAllocation: File[], tmlimit: number  ) {
     console.log('Send file allocation');
     const sendFormDataAllocation = new FormData();
     sendFormDataAllocation.append('myExcelFileAlloc', ReceivedFileAllocation[0]);
+    sendFormDataAllocation.append('timeLimit', String(tmlimit));
     return this.http.post(this.url + '/postFileAllocation' , sendFormDataAllocation, {responseType: 'arraybuffer'});
   }
 
