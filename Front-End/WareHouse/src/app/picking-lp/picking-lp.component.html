@@ -11,7 +11,7 @@
   <input type="file" onclick="this.value = null" (change) ="inputFile($event.target.files)"  accept=".xls, .xlsx" value="">
 
   <div class="title">
-    <span class="title_text">Excel File</span>
+    <span class="title_text">Excel Data File</span>
     <img class="image" src="./assets/paperclip.svg">
   </div>
 </label>
@@ -86,52 +86,85 @@
 
 <br>
 <br>
-<div class="principal-title" *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0">
-  <span>Results</span> 
-  <img class="checked" src="./assets/checked_green.svg">
+
+<!---------------------------------Error en el servicio-------------------------------------->
+<div *ngIf="errorService === true">
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="close(alert)" class="error">
+        <div style="color: black; text-align: center; font-size: 18px;">
+          <strong>SERVICE ERROR</strong>
+          <img class="error-service" src="./assets/cancel.svg">
+        </div>
+        <div style="color: black; text-align:justify; font-size: 14px;">
+          <span>There are problems with the service. It is possible that the error is presented by one of the following four options:</span>
+          <br>
+          <span>1. Connection problems with the server. Check the connection.</span>
+          <br>
+          <span>2. Problems with the excel data file. Check that the data is according to the template presented.</span>
+          <br>
+          <span>3. Data infeasibility. Make sure the assignment is not impossible due to capacity issues.</span>
+          <br>
+          <span>4. Limit execution time. The execution time may not be enough for an answer to be found.</span>
+        </div>
+      </ngb-alert>
+  </p>
 </div>
+<!----------------------------------------------------------------------------------------------->
 
-<div *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0">
-  <div >
-    <table class="table" aria-describedby="mydesc">
-      <thead>
-        <tr>
-          <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
-        </tr>
-        <tr>
-          <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
-        </tr>
-      </thead>
 
-      <tbody *ngFor="let r of receivedRuta.ruta | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
-  
-        <!-- Número de Ruta -->
-        <tr>
-          <th scope="col" colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
-        </tr>
-  
-        <!-- Distancia Recorrida -->
-        <tr>
-          <td colspan="4">Distancia Recorrida: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
-        </tr>
+<!------------------------------------------ Tabla de resultados ---------------------------------------------------->
+<div class="pag-section" *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0 && errorService === false">
+    <div class="card results">
+
+      <div class="card-header" style="color: black; text-align: center; font-size: 18px;">
+        <span ><strong>RESULTS PANEL</strong></span> 
+        <img class="checked" src="./assets/checked_green.svg">
+      </div>
     
-        <!-- Recorrido -->
-        <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
-          <td>Del rack</td>
-          <td>{{x[0]}}</td>
-          <td>al rack</td>
-          <td>{{x[1]}}</td>
-        </tr>
-  
-      </tbody>
-
-    </table>  
-  </div>
+      <div class="card-body">
+        <div >
+          <table class="table" aria-describedby="mydesc">
+            <thead>
+              <tr>
+                <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
+              </tr>
+              <tr>
+                <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
+              </tr>
+            </thead>
+      
+            <tbody *ngFor="let r of receivedRuta.ruta | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
+        
+              <!-- Número de Ruta -->
+              <tr>
+                <th scope="col" colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
+              </tr>
+        
+              <!-- Distancia Recorrida -->
+              <tr>
+                <td colspan="4">Distancia Recorrida: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
+              </tr>
+          
+              <!-- Recorrido -->
+              <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
+                <td>Del rack</td>
+                <td>{{x[0]}}</td>
+                <td>al rack</td>
+                <td>{{x[1]}}</td>
+              </tr>
+        
+            </tbody>
+      
+          </table>  
+        </div>
+            
+        <div class="pag-section">
+          <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
+          class="paginator"></pagination-controls>
+        </div>
+      </div>
     
-  <div class="pag-section">
-    <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
-    class="paginator"></pagination-controls>
-  </div>
+    </div>
 </div>
 
 

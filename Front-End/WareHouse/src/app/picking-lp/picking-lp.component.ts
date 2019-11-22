@@ -5,6 +5,17 @@ import { saveAs } from 'file-saver';
 import { Rutas } from '../Clases/Rutas';
 import { FilesServiceService } from '../Service/files-service.service';
 
+interface Alert {
+  type: string;
+  message: string;
+}
+
+const ALERTS: Alert[] = [
+  {
+    type: 'secondary',
+    message: 'This is a secondary alert',
+  }
+];
 
 @Component({
   selector: 'app-picking-lp',
@@ -94,6 +105,7 @@ export class PickingLPComponent implements OnInit {
   // =====================================================================================================
 
   // =================== Send Data: Excel File. Receive: File Results and JSON ============================
+  public errorService: boolean = false;
   servicePostFilesPicking() {
     if (this.filesArrayPicking[0]) {
       this.http.postFilesPicking(this.filesArrayPicking, this.valueTmlimitPicking).subscribe(
@@ -101,9 +113,14 @@ export class PickingLPComponent implements OnInit {
         response => {
           console.log(response);
           this.convertBLOBtoXLSX(response);
+          this.errorService = false;
         },
 
-        error => { console.log(error); },
+        error => { 
+          console.log(error);
+          this.errorService = true;
+          this.reset();
+        },
 
         () => {
           this.serviceDataJSON();
@@ -153,4 +170,14 @@ export class PickingLPComponent implements OnInit {
     (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
   // =========================================================================================
+
+
+  alerts: Alert[];
+  close(alert: any) {
+    this.alerts.splice(this.alerts.indexOf(alert), 1);
+  }
+
+  reset() {
+    this.alerts = Array.from(ALERTS);
+  }
 }

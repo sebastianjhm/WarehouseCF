@@ -89,7 +89,7 @@ input[type="file"] {
 table{
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
+    width: 90%;
     font-size: 14px;
     text-align: center;
 }
@@ -170,6 +170,10 @@ svg path{
     margin-right: 10px;
 }
 
+.results {
+    width: 60%;
+}
+
 .bd{
     border: 0px;
     height: 37px;
@@ -206,4 +210,20 @@ svg path{
 
 .icon-svg{
     height: 40px;
+}
+
+.error{ 
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 11px;
+    background-color: #ffffff;
+    border-color: #d1d1d1;
+    padding-right: 20px;
+}
+
+.error-service{
+    height: 27px;
+    margin-left: 10px;
+    margin-bottom: 5px;
 }

@@ -5,6 +5,18 @@ import { saveAs } from 'file-saver';
 import { Racks } from '../Clases/Racks';
 import { Rack } from '../Clases/Rack';
 
+interface Alert {
+  type: string;
+  message: string;
+}
+
+const ALERTS: Alert[] = [
+  {
+    type: 'secondary',
+    message: 'This is a secondary alert',
+  }
+];
+
 @Component({
   selector: 'app-allocation',
   templateUrl: './allocation.component.html',
@@ -88,7 +100,7 @@ export class AllocationComponent implements OnInit {
   sendDataAlloc(tl: any) {
     let decisor1 = false;
     let decisor2 = false;
-    if (this.filesArrayAlloc[0]) { decisor1 = true; } else { decisor1 = false; }
+    if ( this.filesArrayAlloc[0] ) { decisor1 = true; } else { decisor1 = false; }
     if ( tl === undefined || tl === null ||  tl <= 0 ) { decisor2 = false; } else { decisor2 = true; }
 
     console.log(decisor1);
@@ -105,6 +117,7 @@ export class AllocationComponent implements OnInit {
   // =====================================================================================================
 
   // =================== Send Data: Excel File. Receive: File Results and JSON ============================
+  public errorService: boolean = false;
   servicePostFilesAlloc() {
     if (this.filesArrayAlloc[0]) {
       this.http.postFilesAllocation(this.filesArrayAlloc, this.valueTmlimitAlloc).subscribe(
@@ -112,9 +125,15 @@ export class AllocationComponent implements OnInit {
         response => {
           console.log(response);
           this.convertBLOBtoXLSX(response);
+          this.errorService = false;
         },
 
-        ( error: any ) => { console.log('Error en el servicio'); console.log(error); },
+        ( error: any ) => { 
+          console.log('Error en el servicio'); 
+          console.log(error);
+          this.errorService = true;
+          this.reset();
+        },
 
         () => {
           this.serviceDataJSON();
@@ -167,7 +186,7 @@ export class AllocationComponent implements OnInit {
     for ( const rack of this.receivedRacks.racks ) {
       if ( rack.referencias.length > 0 ) {
         this.nr = Object.assign({}, rack); // Object.assign: like th copy in python
-        if ( this.nr.hileras === true) {
+        if ( this.nr.hileras === true ) {
           this.nr.hileras = 'Si';
         } else {
           this.nr.hileras = 'No';
@@ -241,4 +260,14 @@ export class AllocationComponent implements OnInit {
     (document.getElementById('button-download') as HTMLInputElement).disabled = true;
   }
   // =========================================================================================
+
+
+  alerts: Alert[];
+  close(alert: any) {
+    this.alerts.splice(this.alerts.indexOf(alert), 1);
+  }
+
+  reset() {
+    this.alerts = Array.from(ALERTS);
+  }
 }

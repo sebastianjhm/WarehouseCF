@@ -13,7 +13,7 @@
 
   <div class="title">
     <span class="title_text">Excel Data File</span>
-    <img class="image" src="./assets/paperclip.svg">
+    <img class="image-clip" src="./assets/paperclip.svg">
   </div>
 </label>
 <!------------------------------------------------->
@@ -59,7 +59,7 @@
 <!--Título-->
 <div class="title">
   <span class="title_text">Execution Parameters</span>
-  <img class="clock-d" src="./assets/alarm-clock-2.svg">
+  <img class="clock-d" src="./assets/circular-alarm.svg">
 </div>
 <!--Sección-->
 <div class="card data">
@@ -85,7 +85,7 @@
       
       <!--Atributos PopOver-->
       <ng-template #popTitle> <div style="text-align: center;"> <strong>ERROR MESSAGE</strong> <img class="checked" height="5px" src="./assets/error.svg"> </div> </ng-template>
-      <ng-template #popContent> <div style="text-align: center;"> Problems sending file.<br>Review data or limit time. </div></ng-template>
+      <ng-template #popContent> <div style="text-align: center;">Cannot send files.<br>Review data or limit time. </div></ng-template>
 
       <button class="btn btn-primary bd col-xs-3" (click)='sendDataAlloc(tmlimitAlloc)'
       [ngbPopover]="popContent" [popoverTitle]="popTitle" [disablePopover]="disablePopover"
@@ -100,17 +100,44 @@
 <br>
 <br>
 
+<!---------------------------------Error en el servicio-------------------------------------->
+<div *ngIf="errorService === true">
+  <p *ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (close)="close(alert)" class="error">
+        <div style="color: black; text-align: center; font-size: 18px;">
+          <strong>SERVICE ERROR</strong>
+          <img class="error-service" src="./assets/cancel.svg">
+        </div>
+        <div style="color: black; text-align:justify; font-size: 14px;">
+          <span>There are problems with the service. It is possible that the error is presented by one of the following four options:</span>
+          <br>
+          <span>1. Connection problems with the server. Check the connection.</span>
+          <br>
+          <span>2. Problems with the excel data file. Check that the data is according to the template presented.</span>
+          <br>
+          <span>3. Data infeasibility. Make sure the assignment is not impossible due to capacity issues.</span>
+          <br>
+          <span>4. Limit execution time. The execution time may not be enough for an answer to be found.</span>
+        </div>
+      </ngb-alert>
+  </p>
+</div>
+<!----------------------------------------------------------------------------------------------->
 
 <!-------------------------------------- Results ------------------------------------------->
-<div class="principal-title" *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0">
-  <span>Results</span> 
-  <img class="checked" src="./assets/checked_green.svg">
-</div>
 
 
-<div class="pag-section" *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0">
+
+<div class="pag-section" *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0 && errorService === false">
   <div class="card results">
+      
+    <div class="card-header" style="color: black; text-align: center; font-size: 18px;">
+      <span ><strong>RESULTS PANEL</strong></span> 
+      <img class="checked" src="./assets/checked_green.svg">
+    </div>
+  
     <div class="card-body">
+
       <ngb-tabset style="font-family: 'Lato', sans-serif;">
 
 
@@ -212,7 +239,10 @@
             <!-- Encabezado Filtro -->
             <div class="pag-section">
               <span class="filter">
-                FILTER<img class="filter-img" src="./assets/filter-black.svg">
+                FILTER
+                <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 402.577 402.577" style="enable-background:new 0 0 402.577 402.577;" xml:space="preserve"><g><g>
+                  <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136   c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083   c3.429,3.614,7.71,5.428,12.851,5.428c2.282,0,4.66-0.479,7.135-1.43c7.426-3.238,11.14-8.851,11.14-16.845V172.166L396.861,31.413   C402.765,25.895,404.093,19.231,400.858,11.427z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#212529"/>
+                </g></g> </svg>
               </span>
               <span style="font-size: 15px;font-weight: bold;margin-top: 7px;">--></span>
               <input [(ngModel)]="busqueda" type="number" min=1 class="form-control i1" placeholder="Rack">
