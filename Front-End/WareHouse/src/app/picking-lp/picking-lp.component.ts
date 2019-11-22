@@ -116,7 +116,7 @@ export class PickingLPComponent implements OnInit {
           this.errorService = false;
         },
 
-        error => { 
+        error => {
           console.log(error);
           this.errorService = true;
           this.reset();

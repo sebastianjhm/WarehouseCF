@@ -63,10 +63,6 @@ input[type="file"] {
 }
 
 
-.ngx:hover {
-    background-color: #c5c5c5;
-}
-
 .image{
     padding-top: 3px;
     padding-bottom : 3px;
@@ -195,7 +191,7 @@ svg path{
 }
 
 .clock-d{
-    height: 25px;
+    height: 22px;
     margin-left: 10px;
 }
 
