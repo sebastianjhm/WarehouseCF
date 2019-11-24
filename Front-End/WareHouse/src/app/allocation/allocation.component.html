@@ -87,6 +87,7 @@
       <ng-template #popTitle> <div style="text-align: center;"> <strong>ERROR MESSAGE</strong> <img class="checked" height="5px" src="./assets/error.svg"> </div> </ng-template>
       <ng-template #popContent> <div style="text-align: center;">Cannot send files.<br>Review data or limit time. </div></ng-template>
 
+      <!--Botón send files-->
       <button class="btn btn-primary bd col-xs-3" (click)='sendDataAlloc(tmlimitAlloc)'
       [ngbPopover]="popContent" [popoverTitle]="popTitle" [disablePopover]="disablePopover"
       placement="right">SEND DATA</button>
@@ -97,11 +98,12 @@
 <!---------------------------------------------->
 
 
-<br>
-<br>
+
 
 <!---------------------------------Error en el servicio-------------------------------------->
 <div *ngIf="errorService === true">
+  <br>
+  <br>
   <p *ngFor="let alert of alerts">
     <ngb-alert [type]="alert.type" (close)="close(alert)" class="error">
         <div style="color: black; text-align: center; font-size: 18px;">
@@ -129,6 +131,8 @@
 
 
 <div class="pag-section" *ngIf="receivedRacksPrint && receivedRacksPrint.fo !== 0 && errorService === false">
+  <br>
+  <br>
   <div class="card results">
       
     <div class="card-header" style="color: black; text-align: center; font-size: 18px;">
@@ -348,23 +352,22 @@
 
 
   
-
-
-
-
-
-
-
-
-
-
 <br>
+<br>
+<!--Atributos PopOver-->
+<ng-template #popTitleDown> <div style="text-align: center;"> <strong>ERROR MESSAGE</strong> <img class="checked" height="5px" src="./assets/error.svg"> </div> </ng-template>
+<ng-template #popContentDown> <div style="text-align: center; display: flex;">The results cannot be downloaded. The file is not available.</div></ng-template>
+
 <div style="text-align: center;">
-  <button class="btn btn-primary" (click)=downloadFileAlloc() id="button-download">DOWNLOAD</button>
+  <button class="btn btn-primary" (click)=downloadFileAlloc() id="button-download"
+  [ngbPopover]="popContentDown" [popoverTitle]="popTitleDown" [disablePopover]="disablePopoverDown"
+  placement="right">DOWNLOAD FILE SOLUTION</button>
 </div>
 
 <br>
 <br>
+<br>
+
 
 <!----------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------->

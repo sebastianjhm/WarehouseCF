@@ -57,6 +57,12 @@ def post_allocation():
 def get_racks_Alloc():
     return jsonify(Racks)
 #fed
+    
+@app.route('/resultsAllocation', methods = ['GET'])
+@cross_origin()
+def get_results_Alloc():
+    return send_file('Results_Allocation.xlsx', as_attachment=True)
+#fed
 
 
 
@@ -113,6 +119,12 @@ def post_picking():
 @cross_origin()
 def get_routes_picking():
     return jsonify(Rutas)
+#fed
+    
+@app.route('/resultsPicking', methods = ['GET'])
+@cross_origin()
+def results_picking():
+    return send_file('Results.xlsx', as_attachment=True)
 #fed
     
 

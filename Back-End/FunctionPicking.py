@@ -5,6 +5,7 @@ import pyomo.environ as pyo
 import copy
 from Rutas import Rutas
 
+
 ################################################################################################################
 def print_results_in_console_Picking( instance ):
     

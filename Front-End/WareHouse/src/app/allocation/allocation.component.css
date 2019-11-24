@@ -264,3 +264,7 @@ table{
     margin-left: 10px;
     margin-bottom: 5px;
 }
+
+.popover-header {
+    padding-bottom: 0px;
+}

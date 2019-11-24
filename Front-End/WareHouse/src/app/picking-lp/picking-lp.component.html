@@ -84,11 +84,12 @@
 
 
 
-<br>
-<br>
+
 
 <!---------------------------------Error en el servicio-------------------------------------->
 <div *ngIf="errorService === true">
+  <br>
+  <br>
   <p *ngFor="let alert of alerts">
     <ngb-alert [type]="alert.type" (close)="close(alert)" class="error">
         <div style="color: black; text-align: center; font-size: 18px;">
@@ -114,7 +115,9 @@
 
 <!------------------------------------------ Tabla de resultados ---------------------------------------------------->
 <div class="pag-section" *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0 && errorService === false">
-    <div class="card results">
+  <br>
+  <br>
+  <div class="card results">
 
       <div class="card-header" style="color: black; text-align: center; font-size: 18px;">
         <span ><strong>RESULTS PANEL</strong></span> 
@@ -169,8 +172,14 @@
 
 
 <br>
+<!--Atributos PopOver-->
+<ng-template #popTitleDown> <div style="text-align: center;"> <strong>ERROR MESSAGE</strong> <img class="checked" height="5px" src="./assets/error.svg"> </div> </ng-template>
+<ng-template #popContentDown> <div style="text-align: center; display: flex;">The results cannot be downloaded. The file is not available.</div></ng-template>
+
 <div style="text-align: center;">
-  <button class="btn btn-primary" (click)=downloadFilePicking() id="button-download">DOWNLOAD</button>
+  <button class="btn btn-primary" (click)=downloadFilePicking() id="button-download"
+  [ngbPopover]="popContentDown" [popoverTitle]="popTitleDown" [disablePopover]="disablePopoverDown"
+  placement="right">DOWNLOAD FILE SOLUTION</button>
 </div>
 
 <br>

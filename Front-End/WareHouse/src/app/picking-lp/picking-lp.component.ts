@@ -34,15 +34,21 @@ export class PickingLPComponent implements OnInit {
   public ExcelFilePicking: File;
   public filesArrayPicking: File[] = [];
   public fileDownPicking = undefined;
+  public disablePopoverDown = false;
 
   // Variables del servicio Ruta
   public receivedRuta: Rutas;
-  public llegoServicio = false;
 
   // Variables Data section
   public tmlimitPicking: any;
   public valueTmlimitPicking: number;
   public disablePopover = false;
+
+  // Variables error servicio
+  alerts: Alert[];
+  public errorService = false;
+
+
 
   // =================== Input File Button =======================
   public inputFile(file: File) {
@@ -105,7 +111,6 @@ export class PickingLPComponent implements OnInit {
   // =====================================================================================================
 
   // =================== Send Data: Excel File. Receive: File Results and JSON ============================
-  public errorService: boolean = false;
   servicePostFilesPicking() {
     if (this.filesArrayPicking[0]) {
       this.http.postFilesPicking(this.filesArrayPicking, this.valueTmlimitPicking).subscribe(
@@ -124,8 +129,6 @@ export class PickingLPComponent implements OnInit {
 
         () => {
           this.serviceDataJSON();
-          this.llegoServicio = true;
-          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
         }
 
       );
@@ -144,8 +147,11 @@ export class PickingLPComponent implements OnInit {
 
   // ================== Function Download Results File =======================
   downloadFilePicking() {
-    if (this.llegoServicio === true) {
+    if (this.fileDownPicking) {
+      this.disablePopoverDown = true;
       saveAs(this.fileDownPicking, 'Resultados_Picking' + '.xlsx');
+    } else {
+      this.disablePopoverDown = false;
     }
   }
   // ==========================================================================
@@ -164,20 +170,30 @@ export class PickingLPComponent implements OnInit {
   }
   // =============================================================================
 
-  // ======================== Initial Function: Property TypeScript ==========================
-  ngOnInit() {
-    this.serviceDataJSON();
-    (document.getElementById('button-download') as HTMLInputElement).disabled = true;
-  }
-  // =========================================================================================
-
-
-  alerts: Alert[];
+  // ======================== Functions Card Error Service ===================================
   close(alert: any) {
     this.alerts.splice(this.alerts.indexOf(alert), 1);
   }
-
   reset() {
     this.alerts = Array.from(ALERTS);
   }
+  // =========================================================================================
+
+  // ======================== Get File on init component ===================================
+  resultsPicking() {
+    this.http.getResultsPicking().subscribe(
+      (response: any) => {
+        this.convertBLOBtoXLSX(response);
+      },
+
+      (error: any) => { console.log(error); }
+    );
+  }
+  // =======================================================================================
+  // ======================== Initial Function: Property TypeScript ==========================
+  ngOnInit() {
+    this.serviceDataJSON();
+    this.resultsPicking();
+  }
+  // =========================================================================================
 }

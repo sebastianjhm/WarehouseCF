@@ -31,15 +31,15 @@ export class AllocationComponent implements OnInit {
   pageActual2 = 1;
   itemsPorPagina2 = 10;
 
-  // Variables Archivo de entrada
+  // Variables Archivo
   public FileNameAlloc: string;
   public ExcelFileAlloc: File;
   public filesArrayAlloc: File[] = [];
   public fileDownAlloc = undefined;
+  public disablePopoverDown = false;
 
   // Variables servicio Rack
   public receivedRacks: Racks;
-  public llegoServicio = false;
   public receivedRacksPrint: Racks = {fo: 0, racks: []};
   public receivedRacksRefPrint: [number, number][] = [];
   public nr: Rack;
@@ -56,6 +56,10 @@ export class AllocationComponent implements OnInit {
   public filterValueRef: any = undefined;
   public verifica: boolean; // Variable por utilizar
 
+  // Variables error servicio
+  alerts: Alert[];
+  public errorService = false;
+  
 
   // =================== Input File Button =======================
   public inputFileAlloc(file: File) {
@@ -117,7 +121,6 @@ export class AllocationComponent implements OnInit {
   // =====================================================================================================
 
   // =================== Send Data: Excel File. Receive: File Results and JSON ============================
-  public errorService: boolean = false;
   servicePostFilesAlloc() {
     if (this.filesArrayAlloc[0]) {
       this.http.postFilesAllocation(this.filesArrayAlloc, this.valueTmlimitAlloc).subscribe(
@@ -128,8 +131,8 @@ export class AllocationComponent implements OnInit {
           this.errorService = false;
         },
 
-        ( error: any ) => { 
-          console.log('Error en el servicio'); 
+        ( error: any ) => {
+          console.log('Error en el servicio');
           console.log(error);
           this.errorService = true;
           this.reset();
@@ -137,8 +140,6 @@ export class AllocationComponent implements OnInit {
 
         () => {
           this.serviceDataJSON();
-          this.llegoServicio = true;
-          (document.getElementById('button-download') as HTMLInputElement).disabled = false;
         }
 
       );
@@ -157,8 +158,11 @@ export class AllocationComponent implements OnInit {
 
   // ================== Function Download Results File =======================
   downloadFileAlloc() {
-    if (this.llegoServicio === true) {
+    if (this.fileDownAlloc) {
+      this.disablePopoverDown = true;
       saveAs(this.fileDownAlloc, 'Resultados_Asignacion' + '.xlsx');
+    } else {
+      this.disablePopoverDown = false;
     }
   }
   // ==========================================================================
@@ -254,20 +258,32 @@ export class AllocationComponent implements OnInit {
   }
   // ===========================================================================================
 
-  // ======================== Initial Function: Property TypeScript ==========================
-  ngOnInit() {
-    this.serviceDataJSON();
-    (document.getElementById('button-download') as HTMLInputElement).disabled = true;
-  }
-  // =========================================================================================
-
-
-  alerts: Alert[];
+  // ======================== Functions Card Error Service ===================================
   close(alert: any) {
     this.alerts.splice(this.alerts.indexOf(alert), 1);
   }
-
   reset() {
     this.alerts = Array.from(ALERTS);
   }
+  // =========================================================================================
+
+  // ======================== Get File on init component ===================================
+  resultsAllocation() {
+    this.http.getResultsAllocation().subscribe(
+      (response: any) => {
+        this.convertBLOBtoXLSX(response);
+      },
+
+      (error: any) => { console.log(error); }
+    );
+  }
+  // =======================================================================================
+
+  // ======================== Initial Function: Property TypeScript ==========================
+  ngOnInit() {
+    this.serviceDataJSON();
+    this.resultsAllocation();
+    // (document.getElementById('button-download') as HTMLInputElement).disabled = true;
+  }
+  // =========================================================================================
 }

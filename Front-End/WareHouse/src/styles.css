@@ -3,3 +3,9 @@ body{
     font-family: 'Lato', sans-serif;
 }
 
+.popover-header {
+    padding-bottom: 0px;
+    padding-top: 5px;
+    margin-bottom: 0px;
+}
+
