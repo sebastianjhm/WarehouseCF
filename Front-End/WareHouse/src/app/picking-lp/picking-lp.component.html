@@ -64,7 +64,20 @@
     <div class="card-body">
       <div class="row s1">
   
-        <label for="Name" class="data-title col-xs-3">LIMIT TIME <img class="clock" src="./assets/clock.svg"></label>
+        <label for="Name" class="data-title col-xs-3">
+          LIMIT TIME
+          <svg class="sgv-clock" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 510 510" style="enable-background:new 0 0 510 510;" xml:space="preserve">
+            <g>
+              <g id="access-time">
+                <path style="fill-opacity:0.9;" d="M255,0C114.75,0,0,114.75,0,255s114.75,255,255,255s255-114.75,255-255S395.25,0,255,0z
+                  M255,459c-112.2,0-204-91.8-204-204S142.8,51,255,51s204,91.8,204,204S367.2,459,255,459z"/>
+                <polygon style="fill-opacity:0.9;" points="267.75,127.5 229.5,127.5 229.5,280.5 362.1,362.1 382.5,328.95 267.75,260.1 		"/>
+              </g>
+            </g>
+          </svg>
+        </label>
+        
         <span style="font-size: 15px;font-weight: bold;margin-top: 7px;">--></span>
         <input [(ngModel)]="tmlimitPicking" type="number" min=1 class="form-control i2 col-xs-3" placeholder="Limit Time (seg)">
         
@@ -114,61 +127,64 @@
 
 
 <!------------------------------------------ Tabla de resultados ---------------------------------------------------->
-<div class="pag-section" *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0 && errorService === false">
+<div *ngIf="errorService === false">
   <br>
   <br>
-  <div class="card results">
-
-      <div class="card-header" style="color: black; text-align: center; font-size: 18px;">
-        <span ><strong>RESULTS PANEL</strong></span> 
-        <img class="checked" src="./assets/checked_green.svg">
-      </div>
-    
-      <div class="card-body">
-        <div >
-          <table class="table" aria-describedby="mydesc">
-            <thead>
-              <tr>
-                <th scope="col" colspan="4">SOLUCIÓN DEL RUTEO</th>
-              </tr>
-              <tr>
-                <th scope="col" colspan="4">Distancia total recorrida: {{receivedRuta.distanciaTotal}}</th>
-              </tr>
-            </thead>
+  <div class="pag-section" *ngIf="receivedRuta && receivedRuta.distanciaTotal !== 0">
+    <div class="card results">
+  
+        <div class="card-header rh" style="color: black; text-align: center; font-size: 18px;">
+          <span ><strong>RESULTS PANEL</strong></span> 
+          <img class="checked" src="./assets/checked_green.svg">
+        </div>
       
-            <tbody *ngFor="let r of receivedRuta.ruta | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
+        <div class="card-body">
+          <div >
+            <table class="table" aria-describedby="mydesc">
+              <thead>
+                <tr>
+                  <th scope="col" colspan="4">PICKING SOLUTION</th>
+                </tr>
+                <tr>
+                  <th scope="col" colspan="4">Total distance traveled: {{receivedRuta.distanciaTotal}}</th>
+                </tr>
+              </thead>
         
-              <!-- Número de Ruta -->
-              <tr>
-                <th scope="col" colspan="4">Ruta {{receivedRuta.ruta[pageActual-1].id}}</th>
-              </tr>
-        
-              <!-- Distancia Recorrida -->
-              <tr>
-                <td colspan="4">Distancia Recorrida: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
-              </tr>
+              <tbody *ngFor="let r of receivedRuta.ruta | paginate: {itemsPerPage: itemsPorPagina, currentPage: pageActual}; let i = index">
           
-              <!-- Recorrido -->
-              <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
-                <td>Del rack</td>
-                <td>{{x[0]}}</td>
-                <td>al rack</td>
-                <td>{{x[1]}}</td>
-              </tr>
-        
-            </tbody>
-      
-          </table>  
-        </div>
+                <!-- Número de Ruta -->
+                <tr>
+                  <th scope="col" colspan="4">Route {{receivedRuta.ruta[pageActual-1].id}}</th>
+                </tr>
+          
+                <!-- Distancia Recorrida -->
+                <tr>
+                  <td colspan="4">Traveled distance: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
+                </tr>
             
-        <div class="pag-section">
-          <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
-          class="paginator"></pagination-controls>
+                <!-- Recorrido -->
+                <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
+                  <td>From rack</td>
+                  <td>{{x[0]}}</td>
+                  <td>to the rack</td>
+                  <td>{{x[1]}}</td>
+                </tr>
+          
+              </tbody>
+        
+            </table>  
+          </div>
+              
+          <div class="pag-section">
+            <pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="pageActual = $event" 
+            class="paginator"></pagination-controls>
+          </div>
         </div>
+      
       </div>
-    
-    </div>
+  </div>
 </div>
+
 
 
 <br>

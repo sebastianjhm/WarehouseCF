@@ -134,6 +134,7 @@ table{
 
 .results {
     width: 60%;
+    border-color: #d1d1d1;
 }
 
 .checked {
@@ -267,4 +268,8 @@ table{
 
 .popover-header {
     padding-bottom: 0px;
+}
+
+.rh {
+    background: #d1d1d1;
 }

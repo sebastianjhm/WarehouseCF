@@ -156,18 +156,19 @@ svg path{
 
 .data-title {
     height: 37px;
-    background: #8f8f8f;
+    background: #777777;
     border-radius: 4px;
     width: 150px;
     text-align: center;
     padding-top: 7px;
     margin-top: 2px;
-    font-weight: bold;
     margin-right: 10px;
+    color: white;
 }
 
 .results {
     width: 60%;
+    border-color: #d1d1d1;
 }
 
 .bd{
@@ -195,6 +196,19 @@ svg path{
     margin-left: 10px;
 }
 
+.sgv-clock{
+    height: 17px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.sgv-clock polygon{
+    fill: white;
+}
+
+.sgv-clock path{
+    fill: white;
+}
 
 svg path{ 
     fill: #686868;
@@ -222,4 +236,8 @@ svg path{
     height: 27px;
     margin-left: 10px;
     margin-bottom: 5px;
+}
+
+.rh {
+    background: #d1d1d1;
 }
