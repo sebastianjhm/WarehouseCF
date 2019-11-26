@@ -168,7 +168,6 @@ svg path{
 
 .results {
     width: 60%;
-    border-color: #d1d1d1;
 }
 
 .bd{
@@ -239,5 +238,5 @@ svg path{
 }
 
 .rh {
-    background: #d1d1d1;
+    background: #ffffff;
 }

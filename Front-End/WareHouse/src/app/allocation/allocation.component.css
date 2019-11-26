@@ -134,7 +134,6 @@ table{
 
 .results {
     width: 60%;
-    border-color: #d1d1d1;
 }
 
 .checked {
@@ -271,5 +270,5 @@ table{
 }
 
 .rh {
-    background: #d1d1d1;
+    background: #ffffff;
 }
