@@ -48,7 +48,8 @@ export class PickingLPComponent implements OnInit {
   alerts: Alert[];
   public errorService = false;
 
-
+  // Bloqueo de pantalla
+  public loading = false;
 
   // =================== Input File Button =======================
   public inputFile(file: File) {
@@ -113,18 +114,21 @@ export class PickingLPComponent implements OnInit {
   // =================== Send Data: Excel File. Receive: File Results and JSON ============================
   servicePostFilesPicking() {
     if (this.filesArrayPicking[0]) {
+      this.loading = true;
       this.http.postFilesPicking(this.filesArrayPicking, this.valueTmlimitPicking).subscribe(
 
         response => {
           console.log(response);
           this.convertBLOBtoXLSX(response);
           this.errorService = false;
+          this.loading = false;
         },
 
         error => {
           console.log(error);
           this.errorService = true;
           this.reset();
+          this.loading = false;
         },
 
         () => {

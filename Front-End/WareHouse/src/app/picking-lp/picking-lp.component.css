@@ -35,7 +35,7 @@ input[type="file"] {
     padding: 4px 4px;
     cursor: pointer;
     display: block;
-    width: 175px;
+    width: 250px;
 }
 
 .ngx{
@@ -116,6 +116,12 @@ table{
 }
 
 .pag-section{
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.pag-section2{
     display: flex;
     justify-content: center;
 }
@@ -240,3 +246,4 @@ svg path{
 .rh {
     background: #ffffff;
 }
+

@@ -59,7 +59,9 @@ export class AllocationComponent implements OnInit {
   // Variables error servicio
   alerts: Alert[];
   public errorService = false;
-  
+
+  // Bloqueo de pantalla
+  public loading = false;
 
   // =================== Input File Button =======================
   public inputFileAlloc(file: File) {
@@ -123,9 +125,11 @@ export class AllocationComponent implements OnInit {
   // =================== Send Data: Excel File. Receive: File Results and JSON ============================
   servicePostFilesAlloc() {
     if (this.filesArrayAlloc[0]) {
+      this.loading = true;
       this.http.postFilesAllocation(this.filesArrayAlloc, this.valueTmlimitAlloc).subscribe(
 
         response => {
+          this.loading = false;
           console.log(response);
           this.convertBLOBtoXLSX(response);
           this.errorService = false;
@@ -135,6 +139,7 @@ export class AllocationComponent implements OnInit {
           console.log('Error en el servicio');
           console.log(error);
           this.errorService = true;
+          this.loading = false;
           this.reset();
         },
 

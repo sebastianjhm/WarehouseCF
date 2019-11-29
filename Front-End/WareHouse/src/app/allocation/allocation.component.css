@@ -123,6 +123,12 @@ table{
 .pag-section{
     display: flex;
     justify-content: center;
+    margin-top: 50px;
+}
+
+.pag-section2{
+    display: flex;
+    justify-content: center;
 }
 
 .i1 {

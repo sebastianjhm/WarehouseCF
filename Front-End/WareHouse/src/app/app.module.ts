@@ -10,6 +10,7 @@ import { PickingLPComponent } from './picking-lp/picking-lp.component';
 import { AllocationComponent } from './allocation/allocation.component';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxLoadingModule } from 'ngx-loading';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     NgxPaginationModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    NgxLoadingModule.forRoot({})
   ],
   providers: [],
   bootstrap: [AppComponent]
