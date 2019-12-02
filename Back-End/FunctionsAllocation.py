@@ -235,7 +235,7 @@ def print_results_XLSX_Alloc( workbook, instance ):
         'align': 'center',
         'valign': 'vcenter'})
     cell_format = workbook.add_format({'align': 'center'})
-        
+    
     ## CREATE SHEET
     worksheet = workbook.add_worksheet('Res. REFERENCES')
     worksheet.set_column(0, 0, 16)

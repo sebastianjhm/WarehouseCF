@@ -9,29 +9,75 @@ from Rutas import Rutas
 ################################################################################################################
 def print_results_in_console_Picking( instance ):
     
+    ## Guardar recorridos
+    results = []
+    for o in instance.O:
+        route = []
+        for i in instance.ORDENES[o]:
+            for j in instance.ORDENES[o]:
+                if ( instance.x[o,i,j].value == 1 ):
+                    route.append([i, j])
+                #fi
+            #rof
+        #rof
+        results.append(route)
+    #rof
+    print(results)
+    
+    ## Ordenar Recorridos
+    for i in range(len(results)):
+        result = [results[i][0]]
+        for _ in range(len(results[i])-1):
+            aux = result[len(result)-1]
+            for r in results[i]:
+                if ( r[0] == aux[1] ):
+                    result.append(r)
+                    break
+                #fi
+            #rof
+        #rof
+        results[i] = result
+    #rof
+    
+    ## Guardar rutas continuas
+    cont_route = []
+    for r in results:
+        f = []
+        for x in r:
+            f.append(instance.Nod_Ref[x[0]])
+        #rof
+        f.append(instance.Nod_Ref[0])
+        cont_route.append(f)
+    #rof
+    
+    ## Imprimir
     print("\n\n")
-    print("SOLUCIÓN DEL EJERCICIO")
+    print("SOLUCIÓN DEL EJERCICIO(RACKS a RACKS)")
     print("--------------------------")
     print("\n")
-    print("Distancia Total: ",pyo.value(instance.FO))
+    print("Distancia Total: ", pyo.value(instance.FO))
     print("\n")
     for o in instance.O:
         print("--------- Orden ",o,"----------")
         print("Distancia Recorrida: ",instance.Dist_ORD[o].value)
         print("Ruta: ")
-        for i in instance.ORDENES[o]:
-            for j in instance.ORDENES[o]:
-                if ( instance.x[o,i,j].value == 1):
-                    print("Del nodo ",i," al nodo",j)
-                #fi
-            #rof
+        for i in range(len(results[o-1])):
+            if ( instance.Nod_Ref[results[o-1][i][1]] == 0 ):
+                print("Del Rack ", instance.Nod_Ref[results[o-1][i][0]], " al rack ", instance.Nod_Ref[results[o-1][i][1]], "......Entrega embalador")
+            else:
+                print("Del Rack ", instance.Nod_Ref[results[o-1][i][0]], " al rack ", instance.Nod_Ref[results[o-1][i][1]], "......Referencia: ", results[o-1][i][1])
+            #fi
         #rof
+        print("\n")
+        print("Ruta continua(Racks): ", cont_route[o-1])
+        print("\n")
     #rof
+    
 #fed
     
 def save_routes_Picking( instance ):
     
-    nueva_ruta = {"id":0, "distanciaRuta": 0, "recorrido": []}
+    nueva_ruta = {"id":0, "distanciaRuta": 0, "recorrido": [], "referencias": []}
     Rutas["distanciaTotal"] = pyo.value(instance.FO)
     
     for o in instance.O:
@@ -40,7 +86,7 @@ def save_routes_Picking( instance ):
         nr["distanciaRuta"] = instance.Dist_ORD[o].value
         for i in instance.ORDENES[o]:
             for j in instance.ORDENES[o]:
-                if ( instance.x[o,i,j].value == 1):
+                if ( instance.x[o,i,j].value == 1 ):
                     r = [i, j]
                     nr["recorrido"].append(r)
                 #fi
@@ -52,18 +98,29 @@ def save_routes_Picking( instance ):
     ## Ordenar Recorridos
     for i in range(len(Rutas["ruta"])):
         result = [Rutas["ruta"][i]["recorrido"][0]]
+        ref = [Rutas["ruta"][i]["recorrido"][0][1]]
         for _ in range(len(Rutas["ruta"][i]["recorrido"])-1):
             aux = result[len(result)-1]
             for r in Rutas["ruta"][i]["recorrido"]:
                 if ( r[0] == aux[1] ):
                     result.append(r)
+                    ref.append(r[1])
                     break
                 #fi
             #rof
         #rof
         Rutas["ruta"][i]["recorrido"] = result
+        Rutas["ruta"][i]["referencias"] = ref
+    #rof
+    
+    for i in range(len(Rutas["ruta"])):
+        for x in Rutas["ruta"][i]["recorrido"]:
+            x[0] = instance.Nod_Ref[x[0]]
+            x[1] = instance.Nod_Ref[x[1]]
+        #rof
     #rof
     print(Rutas)
+    
     
 #fed
 ################################################################################################################   
@@ -275,8 +332,10 @@ def print_results_XLSX_Picking( workbook ):
         
     ## CREATE SHEET
     worksheet = workbook.add_worksheet('Resultados')
-    worksheet.set_column(0, 0, 20) ## Width: set_column(first_col, last_col, width, cell_format, options)
-
+    worksheet.set_column(0, 3, 11) ## Width: set_column(first_col, last_col, width, cell_format, options)
+    worksheet.set_column(4, 4, 3)
+    worksheet.set_column(5, 5, 20)
+    
     ## PRINT RESULTS
     worksheet.merge_range(0, 0, 0, 3, "SOLUCIÓN DEL EJERCICIO", merge_format)
     worksheet.merge_range(1, 0, 1, 1, "Distancia Total: ", merge_format)
@@ -287,19 +346,29 @@ def print_results_XLSX_Picking( workbook ):
     for ruta in Rutas["ruta"]:
         worksheet.merge_range(row, col, row, 3, "Ruta "+ str(ruta["id"]), merge_format)
         row += 1
-
+        
         worksheet.merge_range(row, col, row, col + 1,"Distancia Recorrida: ", merge_format)
         worksheet.merge_range(row, col + 2, row, col + 3,ruta["distanciaRuta"], cell_format)
         row += 1
         
         worksheet.merge_range(row, col, row, col + 3, "Recorrido: ", cell_format)
+        worksheet.write(row, col + 5, "Seleccionar Ref: ", merge_format)
         row += 1
         
-        for rec in ruta["recorrido"]:
-            worksheet.write(row, col + 0,"Del rack ", cell_format)
-            worksheet.write(row, col + 1, rec[0], cell_format)
-            worksheet.write(row, col + 2," al rack", cell_format)
-            worksheet.write(row, col + 3, rec[1], cell_format)
+        for k in range(len(ruta["recorrido"])):
+            if (ruta["referencias"][k] != 0):
+                worksheet.write(row, col + 0,"Del rack ", cell_format)
+                worksheet.write(row, col + 1, ruta["recorrido"][k][0], cell_format)
+                worksheet.write(row, col + 2," al rack", cell_format)
+                worksheet.write(row, col + 3, ruta["recorrido"][k][1], cell_format)
+                worksheet.write(row, col + 5, ruta["referencias"][k], merge_format)
+            else:
+                worksheet.write(row, col + 0,"Del rack ", cell_format)
+                worksheet.write(row, col + 1, ruta["recorrido"][k][0], cell_format)
+                worksheet.write(row, col + 2," al rack", cell_format)
+                worksheet.write(row, col + 3, ruta["recorrido"][k][1], cell_format)
+                worksheet.write(row, col + 5, "Entregar al embalador", merge_format)
+            #fi
             row += 1
         #rof
         row += 1

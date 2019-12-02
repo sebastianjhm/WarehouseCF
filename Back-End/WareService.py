@@ -124,7 +124,7 @@ def get_routes_picking():
 @app.route('/resultsPicking', methods = ['GET'])
 @cross_origin()
 def results_picking():
-    return send_file('Results.xlsx', as_attachment=True)
+    return send_file('Results_Picking.xlsx', as_attachment=True)
 #fed
     
 

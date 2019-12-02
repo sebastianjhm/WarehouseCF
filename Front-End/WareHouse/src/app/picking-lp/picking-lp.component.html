@@ -142,10 +142,10 @@
             <table class="table" aria-describedby="mydesc">
               <thead>
                 <tr>
-                  <th scope="col" colspan="4">PICKING SOLUTION</th>
+                  <th scope="col" colspan="5">PICKING SOLUTION</th>
                 </tr>
                 <tr>
-                  <th scope="col" colspan="4">Total distance traveled: {{receivedRuta.distanciaTotal}}</th>
+                  <th scope="col" colspan="5">Total distance traveled: {{receivedRuta.distanciaTotal}}</th>
                 </tr>
               </thead>
         
@@ -153,20 +153,30 @@
           
                 <!-- Número de Ruta -->
                 <tr>
-                  <th scope="col" colspan="4">Route {{receivedRuta.ruta[pageActual-1].id}}</th>
+                  <th scope="col" colspan="5">Route {{receivedRuta.ruta[pageActual-1].id}}</th>
                 </tr>
           
                 <!-- Distancia Recorrida -->
                 <tr>
-                  <td colspan="4">Traveled distance: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
+                  <td colspan="5">Traveled distance: {{receivedRuta.ruta[pageActual-1].distanciaRuta}}</td>
                 </tr>
             
                 <!-- Recorrido -->
-                <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido">
-                  <td>From rack</td>
-                  <td>{{x[0]}}</td>
-                  <td>to the rack</td>
-                  <td>{{x[1]}}</td>
+                <tr *ngFor="let x of receivedRuta.ruta[pageActual-1].recorrido; let k = index">
+                  <ng-container *ngIf="receivedRuta.ruta[pageActual-1].referencias[k] !== 0; else option2">
+                    <td>From rack</td>
+                    <td>{{x[0]}}</td>
+                    <td>to the rack</td>
+                    <td>{{x[1]}}</td>
+                    <td><strong>Pick reference {{receivedRuta.ruta[pageActual-1].referencias[k]}}</strong></td>
+                  </ng-container>
+                  <ng-template #option2>
+                    <td>From rack</td>
+                    <td>{{x[0]}}</td>
+                    <td>to the rack</td>
+                    <td>{{x[1]}}</td>
+                    <td><strong>Deliver packer</strong></td>
+                  </ng-template>
                 </tr>
           
               </tbody>
