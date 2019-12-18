@@ -196,9 +196,9 @@ export class AllocationComponent implements OnInit {
       if ( rack.referencias.length > 0 ) {
         this.nr = Object.assign({}, rack); // Object.assign: like th copy in python
         if ( this.nr.hileras === true ) {
-          this.nr.hileras = 'Si';
+          this.nr.hileras = 'Yes';
         } else {
-          this.nr.hileras = 'No';
+          this.nr.hileras = 'Not';
         }
         this.receivedRacksPrint.racks.push(this.nr);
       }
