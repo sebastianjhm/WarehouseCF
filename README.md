@@ -1,7 +1,7 @@
 # WarehouseCF
 - Optimization of picking times by relocation of references in the finished product warehouse
 - Video link: https://youtu.be/HVSgakUnKc0
-- ![alt text](https://github.com/SebastianJHM/WarehouseCF/blob/master/Visual/f.PNG)
+ ![alt text](https://github.com/SebastianJHM/WarehouseCF/blob/master/Visual/f.PNG)
 ## FRONT-END
 
 **1. ANGULAR**
