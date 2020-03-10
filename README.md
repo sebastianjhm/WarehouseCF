@@ -1,6 +1,6 @@
 # WarehouseCF
--Optimization of picking times by relocation of references in the finished product warehouse
--Video link: https://youtu.be/HVSgakUnKc0
+- Optimization of picking times by relocation of references in the finished product warehouse
+- Video link: https://youtu.be/HVSgakUnKc0
 
 ## FRONT-END
 
